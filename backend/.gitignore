@@ -1,0 +1,22 @@
+## User and local settings
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## Build outputs
+[Bb]in/
+[Oo]bj/
+
+## Test results and logs
+[Tt]est[Rr]esults/
+[Ll]ogs/
+
+## IDE and Tooling configurations
+.vs/
+.idea/
+.vscode/
+
+## Operating Systems
+.DS_Store
+Thumbs.db
