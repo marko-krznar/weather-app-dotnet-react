@@ -1,57 +1,63 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+interface LoginResponse {
+	accessToken: string;
+	refreshToken: string;
+}
+
 export const auth = createApi({
 	reducerPath: "auth",
 	baseQuery: fetchBaseQuery({
 		baseUrl: import.meta.env.VITE_API_BASE_URL,
+		prepareHeaders: (headers) => {
+			const token = localStorage.getItem("accessToken");
+			if (token) {
+				headers.set("authorization", `Bearer ${token}`);
+			}
+			return headers;
+		},
 	}),
 	endpoints: (builder) => ({
-		// Koristimo mutation jer šaljemo podatke (POST) koji mijenjaju stanje/autentifikaciju
-		login: builder.mutation<string, { username: string; password: string }>(
-			{
-				query: (credentials) => ({
-					url: "/auth/login",
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: credentials,
-					// VAŽNO: Budući da tvoj backend vraća token kao običan tekst (response.text()),
-					// moramo reći RTK Queryju da ne očekuje JSON.
-					responseHandler: (response) => response.text(),
-				}),
-				// onQueryStarted se pokreće automatski kada mutacija započne.
-				// Ovdje možemo sigurno spremiti token nakon što zahtjev uspije.
-				async onQueryStarted(_, { queryFulfilled }) {
-					try {
-						const { data: token } = await queryFulfilled;
-						localStorage.setItem("token", token);
-						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					} catch (error) {
-						// Ovdje možeš obraditi grešku ako je potrebno,
-						// ali RTK Query već sam upravlja error stanjem
-					}
+		login: builder.mutation<
+			LoginResponse,
+			{ username: string; password: string }
+		>({
+			query: (credentials) => ({
+				url: "/Auth/login",
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
 				},
-			}
-		),
-		// --- DODAJ REGISTRACIJU OVDJE ---
-		// Dodajemo registraciju prema specifikaciji sa slike
+				body: credentials,
+			}),
+			async onQueryStarted(_, { queryFulfilled }) {
+				try {
+					const { data } = await queryFulfilled;
+					localStorage.setItem("accessToken", data.accessToken);
+					localStorage.setItem("refreshToken", data.refreshToken);
+				} catch (error) {
+					console.error(
+						"Greška pri spremanju tokena nakon prijave:",
+						error
+					);
+				}
+			},
+		}),
+
 		register: builder.mutation<
-			{ id: number; username: string; passwordHash: string }, // Tip odgovora (JSON objekt)
-			{ username: string; password: string } // Tip onoga što šalješ (Body)
+			{ id: number; username: string; passwordHash: string },
+			{ username: string; password: string }
 		>({
 			query: (userCredentials) => ({
-				url: "/Auth/register", // Pazi na veliko slovo "A" ako ti baseUrl završava s "/api"
+				url: "/Auth/register",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: userCredentials,
-				// Ovdje NE stavljaš responseHandler jer backend vraća standardni JSON objekt {}
 			}),
 		}),
 	}),
 });
 
-// RTK Query automatski generira ovaj hook
 export const { useLoginMutation, useRegisterMutation } = auth;

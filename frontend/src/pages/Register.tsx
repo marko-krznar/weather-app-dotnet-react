@@ -34,7 +34,7 @@ function Register() {
 			<Button
 				variant="text"
 				startIcon={<KeyboardBackspaceIcon />}
-				onClick={() => navigate("/")}
+				onClick={() => navigate("/login")}
 			>
 				Back
 			</Button>
