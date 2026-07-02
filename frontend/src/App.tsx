@@ -1,10 +1,10 @@
 import Container from "@mui/material/Container";
-import Login from "./pages/Login";
+import Routes from "./routes/Routes";
 
 function App() {
 	return (
 		<Container>
-			<Login />
+			<Routes />
 		</Container>
 	);
 }

@@ -2,23 +2,23 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useNavigate } from "react-router";
-import { useLoginMutation } from "../redux/auth/authSlice";
+import { useRegisterMutation } from "../redux/auth/authSlice";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { useGetCurrentWeatherQuery } from "../redux/weather/weatherSlice";
 
-function Login() {
+function Register() {
 	const navigate = useNavigate();
 
 	// Hook vraća funkciju 'login' i objekt sa stanjima poput isLoading i error
-	const [login, { isLoading, error, isError }] = useLoginMutation();
+	const [register, { isLoading, isError, error }] = useRegisterMutation();
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		try {
 			// .unwrap() omogućuje da uhvatiš grešku u catch bloku ako backend vrati npr. 401 ili 403
-			await login({ username: "pal", password: "pa" }).unwrap();
+			await register({ username: "test", password: "test" }).unwrap();
 
 			// Ako je uspješno, token je već spremljen u localStorage (zbog onQueryStarted)
 			alert("Uspješna prijava!");
@@ -29,47 +29,42 @@ function Login() {
 		}
 	};
 
-	// Definiraj koordinate (ako ne proslijediš ništa, okinut će se defaultne iz slice-a)
-	const coordinates = { lat: 52.2297, lon: 21.0122 };
-
-	// Hook automatski pokreće zahtjev čim se komponenta učita!
-	const { data } = useGetCurrentWeatherQuery(coordinates);
-
-	if (isLoading) return <p>Učitavanje prognoze...</p>;
-	if (error) return <p>Greška pri dohvaćanju vremena.</p>;
-
-	console.log(data);
-
 	return (
 		<Stack spacing={2}>
+			<Button
+				variant="text"
+				startIcon={<KeyboardBackspaceIcon />}
+				onClick={() => navigate("/")}
+			>
+				Back
+			</Button>
+
 			<Typography variant="h2">Dobrodošli u WeatherApp</Typography>
 			<Typography variant="body1">
 				Unesite željeni grad, provjerite vremenske prilike i detaljnu
 				petodnevnu prognozu.
 			</Typography>
 			{isError && (
-				<p style={{ color: "red" }}>
+				<Typography variant="body1">
 					{error && String((error as FetchBaseQueryError).data)}
-				</p>
+				</Typography>
 			)}
+			<TextField
+				id="outlined-basic"
+				label="Username"
+				variant="outlined"
+			/>
 			<TextField id="outlined-basic" label="Email" variant="outlined" />
 			<TextField
 				id="outlined-basic"
 				label="Password"
 				variant="outlined"
 			/>
-			<Button
-				variant="contained"
-				onClick={handleSubmit}
-				disabled={isLoading}
-			>
-				{isLoading ? "Prijava u tijeku..." : "Prijavi se"}
-			</Button>
-			<Button variant="text" onClick={() => navigate("/register")}>
-				Register
+			<Button variant="contained" onClick={handleSubmit}>
+				{isLoading ? "Registering" : "Register"}
 			</Button>
 		</Stack>
 	);
 }
 
-export default Login;
+export default Register;
