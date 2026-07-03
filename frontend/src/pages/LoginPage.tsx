@@ -5,11 +5,13 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 import { useLoginMutation } from "../redux/auth/authSlice";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {
 	useLazyGetCurrentWeatherQuery,
 	useLazyGetWeatherForFiveDaysQuery,
 } from "../redux/weather/weatherSlice";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
@@ -17,15 +19,15 @@ export default function LoginPage() {
 	const [triggerFetchWeatherForFiveDays] =
 		useLazyGetWeatherForFiveDaysQuery();
 
-	const [username, setUsername] = useState("");
+	const [usernameOrEmail, setUsernameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const [login, { isLoading, isError, error }] = useLoginMutation();
+	const [login, { isLoading }] = useLoginMutation();
 
 	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
-			await login({ username, password }).unwrap();
+			await login({ usernameOrEmail, password }).unwrap();
 			await triggerFetchWeather({ lat: 52.2297, lon: 21.0122 }).unwrap();
 			await triggerFetchWeatherForFiveDays({
 				lat: 52.2297,
@@ -39,50 +41,69 @@ export default function LoginPage() {
 
 	return (
 		<Stack
-			component="form"
-			onSubmit={handleSubmit}
 			spacing={2}
-			noValidate
-			autoComplete="off"
+			sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
 		>
-			<Typography variant="h2">Dobrodošli u WeatherApp</Typography>
-			<Typography variant="body1">
-				Unesite željeni grad, provjerite vremenske prilike i detaljnu
-				petodnevnu prognozu.
-			</Typography>
-
-			{isError && (
-				<Typography color="error" variant="body2">
-					{error && "data" in error
-						? String((error as FetchBaseQueryError).data)
-						: "Greška pri prijavi."}
-				</Typography>
-			)}
-
-			<TextField
-				id="username-input"
-				label="Username / Email"
-				variant="outlined"
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
-				required
-			/>
-			<TextField
-				id="password-input"
-				label="Password"
-				type="password"
-				variant="outlined"
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-				required
-			/>
-
-			<Button type="submit" variant="contained" disabled={isLoading}>
-				{isLoading ? "Prijava u tijeku..." : "Prijavi se"}
-			</Button>
-
+			<Card
+				component="form"
+				onSubmit={handleSubmit}
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					padding: 4,
+					maxWidth: 480,
+				}}
+			>
+				<CardContent
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 2,
+					}}
+				>
+					<Typography
+						variant="h2"
+						align="center"
+						sx={{ textTransform: "uppercase" }}
+					>
+						Prijavi se
+					</Typography>
+					<Typography variant="body1" align="center" gutterBottom>
+						Prijavite se kako biste pregledali trenutno vrijeme i
+						detaljnu petodnevnu vremensku prognozu za grad po vašem
+						izboru.
+					</Typography>
+					<TextField
+						id="username-input"
+						label="Username / Email"
+						variant="outlined"
+						value={usernameOrEmail}
+						onChange={(e) => setUsernameOrEmail(e.target.value)}
+						required
+					/>
+					<TextField
+						id="password-input"
+						label="Password"
+						type="password"
+						variant="outlined"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+					/>
+				</CardContent>
+				<CardActions sx={{ padding: "1rem" }}>
+					<Button
+						type="submit"
+						variant="contained"
+						disabled={isLoading || !usernameOrEmail || !password}
+					>
+						{isLoading ? "Prijava u tijeku..." : "Prijavi se"}
+					</Button>
+				</CardActions>
+			</Card>
 			<Button variant="text" onClick={() => navigate("/register")}>
-				Register
+				Kreiraj novi profil
 			</Button>
 		</Stack>
 	);

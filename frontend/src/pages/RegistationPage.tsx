@@ -6,62 +6,124 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useNavigate } from "react-router";
 import { useRegisterMutation } from "../redux/auth/authSlice";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import { useState } from "react";
 
 export default function RegistationPage() {
 	const navigate = useNavigate();
-
-	// Hook vraća funkciju 'login' i objekt sa stanjima poput isLoading i error
 	const [register, { isLoading, isError, error }] = useRegisterMutation();
+	const [formData, setFormData] = useState({
+		username: "",
+		email: "",
+		password: "",
+	});
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const handleSubmit = async (e: any) => {
-		e.preventDefault();
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		try {
-			// .unwrap() omogućuje da uhvatiš grešku u catch bloku ako backend vrati npr. 401 ili 403
-			await register({ username: "test", password: "test" }).unwrap();
-
-			// Ako je uspješno, token je već spremljen u localStorage (zbog onQueryStarted)
-			alert("Uspješna prijava!");
-			// Ovdje možeš napraviti preusmjeravanje (npr. navigate("/dashboard"))
+			await register(formData).unwrap();
 		} catch (err) {
-			// Greška je već uhvaćena i bit će prikazana u UI-ju preko 'error' objekta
 			console.error("Greška pri prijavi:", err);
 		}
 	};
 
 	return (
-		<Stack spacing={2}>
+		<Stack
+			spacing={2}
+			sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
+		>
+			<Card
+				component="form"
+				onSubmit={handleSubmit}
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					padding: 4,
+					maxWidth: 600,
+				}}
+			>
+				<CardContent
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 2,
+					}}
+				>
+					<Typography
+						variant="h2"
+						align="center"
+						sx={{ textTransform: "uppercase" }}
+					>
+						Regitriraj se
+					</Typography>
+					<Typography variant="body1" align="center" gutterBottom>
+						Za korištenje WeatherApp-a potrebno je kreirati
+						korisnički profil. Nakon registracije moći ćete
+						pretraživati gradove te pregledavati trenutačno vrijeme
+						i petodnevnu vremensku prognozu.
+					</Typography>
+					{isError && (
+						<Typography variant="body1">
+							{error &&
+								String((error as FetchBaseQueryError).data)}
+						</Typography>
+					)}
+					<TextField
+						label="Username"
+						name="username"
+						value={formData.username}
+						onChange={handleChange}
+						required
+					/>
+					<TextField
+						label="Email"
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
+						required
+					/>
+					<TextField
+						label="Password"
+						name="password"
+						type="password"
+						value={formData.password}
+						onChange={handleChange}
+						required
+					/>
+				</CardContent>
+				<CardActions sx={{ padding: "1rem" }}>
+					<Button
+						type="submit"
+						variant="contained"
+						disabled={
+							isLoading ||
+							!formData.username ||
+							!formData.email ||
+							!formData.password
+						}
+					>
+						{isLoading ? "Prijava u tijeku..." : "Kreiraj"}
+					</Button>
+				</CardActions>
+			</Card>
 			<Button
 				variant="text"
 				startIcon={<KeyboardBackspaceIcon />}
 				onClick={() => navigate("/login")}
 			>
-				Back
-			</Button>
-
-			<Typography variant="h2">Dobrodošli u WeatherApp</Typography>
-			<Typography variant="body1">
-				Unesite željeni grad, provjerite vremenske prilike i detaljnu
-				petodnevnu prognozu.
-			</Typography>
-			{isError && (
-				<Typography variant="body1">
-					{error && String((error as FetchBaseQueryError).data)}
-				</Typography>
-			)}
-			<TextField
-				id="outlined-basic"
-				label="Username"
-				variant="outlined"
-			/>
-			<TextField id="outlined-basic" label="Email" variant="outlined" />
-			<TextField
-				id="outlined-basic"
-				label="Password"
-				variant="outlined"
-			/>
-			<Button variant="contained" onClick={handleSubmit}>
-				{isLoading ? "Registering" : "Register"}
+				Povratak na prijavu
 			</Button>
 		</Stack>
 	);
