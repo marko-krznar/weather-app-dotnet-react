@@ -20,6 +20,11 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var user = await authService.RegisterAsync(request);
 
             if (user == null)
@@ -31,13 +36,18 @@ namespace backend.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<TokenResponseDto>> Login(UserDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login(LoginUserDto request)
         {
-            var result = await authService.LoginAsync(request);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await authService.LoginAsync(request.UsernameOrEmail, request.Password);
 
             if (result == null)
             {
-                return BadRequest("Invalid username or password.");
+                return BadRequest("Nevažeće korisničko ime ili lozinka.");
             }
 
             return Ok(result);
@@ -50,7 +60,7 @@ namespace backend.Controllers
 
             if (result is null || result.AccessToken is null || result.RefreshToken is null)
             {
-                return BadRequest("Invalid username or password.");
+                return BadRequest("Nevažeće korisničko ime ili lozinka.");
             }
 
             return Ok(result);

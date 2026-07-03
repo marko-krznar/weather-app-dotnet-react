@@ -26,6 +26,7 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
 
         user.Username = request.Username;
         user.PasswordHash = hashedPassword;
+        user.Email = request.Email;
 
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -43,14 +44,14 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
     }
 
 
-    public async Task<TokenResponseDto?> LoginAsync(UserDto request)
+    public async Task<TokenResponseDto?> LoginAsync(string usernameOrEmail, string password)
     {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
         if (user == null)
         {
             return null;
         }
-        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Failed)
         {
             return null;
         }

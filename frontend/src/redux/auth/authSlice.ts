@@ -20,7 +20,7 @@ export const auth = createApi({
 	endpoints: (builder) => ({
 		login: builder.mutation<
 			LoginResponse,
-			{ username: string; password: string }
+			{ usernameOrEmail: string; password: string }
 		>({
 			query: (credentials) => ({
 				url: "/Auth/login",
