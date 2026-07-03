@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useRegisterMutation } from "../redux/auth/authSlice";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-function Register() {
+export default function RegistationPage() {
 	const navigate = useNavigate();
 
 	// Hook vraća funkciju 'login' i objekt sa stanjima poput isLoading i error
@@ -66,5 +66,3 @@ function Register() {
 		</Stack>
 	);
 }
-
-export default Register;

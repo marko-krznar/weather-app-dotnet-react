@@ -11,7 +11,7 @@ import {
 	useLazyGetWeatherForFiveDaysQuery,
 } from "../redux/weather/weatherSlice";
 
-function Login() {
+export default function LoginPage() {
 	const navigate = useNavigate();
 	const [triggerFetchWeather] = useLazyGetCurrentWeatherQuery();
 	const [triggerFetchWeatherForFiveDays] =
@@ -87,5 +87,3 @@ function Login() {
 		</Stack>
 	);
 }
-
-export default Login;

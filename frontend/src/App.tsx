@@ -3,7 +3,13 @@ import Routes from "./routes/Routes";
 
 function App() {
 	return (
-		<Container>
+		<Container
+			sx={{
+				minHeight: "100vh",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
 			<Routes />
 		</Container>
 	);
