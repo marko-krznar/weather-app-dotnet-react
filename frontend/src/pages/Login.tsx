@@ -6,9 +6,16 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 import { useLoginMutation } from "../redux/auth/authSlice";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import {
+	useLazyGetCurrentWeatherQuery,
+	useLazyGetWeatherForFiveDaysQuery,
+} from "../redux/weather/weatherSlice";
 
 function Login() {
 	const navigate = useNavigate();
+	const [triggerFetchWeather] = useLazyGetCurrentWeatherQuery();
+	const [triggerFetchWeatherForFiveDays] =
+		useLazyGetWeatherForFiveDaysQuery();
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -19,9 +26,14 @@ function Login() {
 		event.preventDefault();
 		try {
 			await login({ username, password }).unwrap();
+			await triggerFetchWeather({ lat: 52.2297, lon: 21.0122 }).unwrap();
+			await triggerFetchWeatherForFiveDays({
+				lat: 52.2297,
+				lon: 21.0122,
+			}).unwrap();
 			navigate("/");
 		} catch (err) {
-			console.error("Greška pri prijavi:", err);
+			console.error(err);
 		}
 	};
 
