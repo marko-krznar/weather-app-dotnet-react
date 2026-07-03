@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
@@ -58,6 +59,40 @@ namespace backend.Controllers
             }
 
             var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        // [Authorize]
+        [HttpGet("geocode")]
+        public async Task<IActionResult> GetCoordsByCityName([FromQuery] string q, [FromQuery] int limit = 1)
+        {
+            if (string.IsNullOrEmpty(q))
+            {
+                return BadRequest("Ime grada je obavezno.");
+            }
+
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                return StatusCode(500, "API ključ nije konfiguriran na serveru.");
+            }
+
+            var url = $"https://api.openweathermap.org/geo/1.0/direct?q={Uri.EscapeDataString(q)}&limit={limit}&appid={_apiKey}";
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return StatusCode((int)response.StatusCode, "Greška pri dohvaćanju koordinata.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var locations = System.Text.Json.JsonSerializer.Deserialize<List<object>>(content);
+
+            if (locations == null || locations.Count == 0)
+            {
+                return NotFound(new { message = $"Grad '{q}' nije pronađen." });
+            }
+
             return Content(content, "application/json");
         }
     }

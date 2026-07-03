@@ -1,58 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Snackbar, Alert } from "@mui/material";
-import { useState } from "react";
-
-// TODO
-// - fix za any
-// - big fix za prikaz jednog errora, kad se zatvori opet se dobije error, ne prikazuje se poruka
+import { clearError } from "../redux/ui/uiSlice";
+import type { RootStore } from "../redux/store";
 
 export default function GlobalError() {
-	const [visible, setVisible] = useState(true);
-	const errorMessages = useSelector((state: any) => {
-		const errors: string[] = [];
+	const dispatch = useDispatch();
 
-		if (state.auth?.mutations) {
-			Object.values(state.auth.mutations).forEach((mutation: any) => {
-				if (mutation.error) {
-					errors.push(
-						mutation.error.data || "Greška u autentifikaciji."
-					);
-				}
-			});
-		}
+	const currentMessage = useSelector(
+		(state: RootStore) => state.ui.errorMessage
+	);
 
-		if (state.weather?.queries) {
-			Object.values(state.weather.queries).forEach((query: any) => {
-				if (query.error) {
-					errors.push(
-						query.error.data ||
-							"Greška u dohvaćanju podataka o vremenu."
-					);
-				}
-			});
-		}
+	const isOpen = Boolean(currentMessage);
 
-		return errors;
-	});
+	const handleClose = () => {
+		dispatch(clearError());
+	};
 
 	return (
-		<>
-			{errorMessages.map((message, index) => (
-				<Snackbar
-					key={index}
-					open={visible}
-					anchorOrigin={{ vertical: "top", horizontal: "right" }}
-				>
-					<Alert
-						severity="error"
-						variant="filled"
-						onClose={() => setVisible(false)}
-					>
-						{message}
-					</Alert>
-				</Snackbar>
-			))}
-		</>
+		<Snackbar
+			open={isOpen}
+			onClose={handleClose}
+			anchorOrigin={{ vertical: "top", horizontal: "right" }}
+		>
+			<Alert severity="error" variant="filled" onClose={handleClose}>
+				{currentMessage}
+			</Alert>
+		</Snackbar>
 	);
 }
