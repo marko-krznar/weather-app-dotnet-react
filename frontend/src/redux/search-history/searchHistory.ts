@@ -26,4 +26,5 @@ export const searchHistory = createApi({
 	}),
 });
 
-export const { useGetSearchHistoryQuery } = searchHistory;
+export const { useGetSearchHistoryQuery, useLazyGetSearchHistoryQuery } =
+	searchHistory;
