@@ -45,7 +45,7 @@ export const weather = createApi({
 				method: "GET",
 				params: { q: cityName },
 			}),
-			keepUnusedDataFor: 0, // <-- KLJUČNO: Briše cache odmah čim query završi, tjerajući svaki "Traži" klik na backend
+			keepUnusedDataFor: 0,
 		}),
 	}),
 });

@@ -5,19 +5,12 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 import { useLoginMutation } from "../redux/auth/authSlice";
-import {
-	useLazyGetCurrentWeatherQuery,
-	useLazyGetWeatherForFiveDaysQuery,
-} from "../redux/weather/weatherSlice";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
-	const [triggerFetchWeather] = useLazyGetCurrentWeatherQuery();
-	const [triggerFetchWeatherForFiveDays] =
-		useLazyGetWeatherForFiveDaysQuery();
 
 	const [usernameOrEmail, setUsernameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -28,11 +21,6 @@ export default function LoginPage() {
 		event.preventDefault();
 		try {
 			await login({ usernameOrEmail, password }).unwrap();
-			await triggerFetchWeather({ lat: 52.2297, lon: 21.0122 }).unwrap();
-			await triggerFetchWeatherForFiveDays({
-				lat: 52.2297,
-				lon: 21.0122,
-			}).unwrap();
 			navigate("/");
 		} catch (err) {
 			console.error(err);
