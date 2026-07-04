@@ -8,6 +8,7 @@ namespace backend.Entities
         public int UserId { get; set; }
         public string SearchTerm { get; set; } = string.Empty;
         public DateTime SearchedAt { get; set; } = DateTime.UtcNow;
+        public string WeatherCondition { get; set; } = string.Empty;
         public User? User { get; set; }
     }
 }

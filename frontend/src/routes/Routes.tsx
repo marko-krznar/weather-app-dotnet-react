@@ -5,6 +5,7 @@ import WeatherPage from "../pages/WeatherPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import SearchHistoryPage from "../pages/SearchHistoryPage";
 import MainLayout from "../components/MainLayout";
+import StatisticsPage from "../pages/StatisticsPage";
 
 export default function AppRoutes() {
 	return (
@@ -13,7 +14,8 @@ export default function AppRoutes() {
 				<Route element={<ProtectedRoute />}>
 					<Route path="/" element={<WeatherPage />} />
 				</Route>
-				<Route path="/search-history" element={<SearchHistoryPage />} />
+				<Route path="/history" element={<SearchHistoryPage />} />
+				<Route path="/stats" element={<StatisticsPage />} />
 			</Route>
 
 			<Route path="/login" element={<LoginPage />} />

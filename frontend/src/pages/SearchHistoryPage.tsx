@@ -12,7 +12,7 @@ import {
 	Box,
 	Button,
 } from "@mui/material";
-import { useGetSearchHistoryQuery } from "../redux/search-history/searchHistory";
+import { useGetSearchHistoryQuery } from "../redux/search/search";
 import { useNavigate } from "react-router";
 
 export default function SearchHistoryPage() {
@@ -45,7 +45,7 @@ export default function SearchHistoryPage() {
 		});
 	};
 
-	const visibleRows = historyData.slice(
+	const visibleRows = historyData?.slice(
 		page * rowsPerPage,
 		page * rowsPerPage + rowsPerPage
 	);
@@ -76,7 +76,7 @@ export default function SearchHistoryPage() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{visibleRows.map((row) => (
+						{visibleRows?.map((row) => (
 							<TableRow
 								key={row.id}
 								sx={{
@@ -101,7 +101,7 @@ export default function SearchHistoryPage() {
 								</TableCell>
 							</TableRow>
 						))}
-						{historyData.length === 0 && (
+						{historyData?.length === 0 && (
 							<TableRow>
 								<TableCell
 									colSpan={3}
@@ -117,7 +117,7 @@ export default function SearchHistoryPage() {
 				<TablePagination
 					rowsPerPageOptions={[5, 10, 25]}
 					component="div"
-					count={historyData.length}
+					count={historyData?.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onPageChange={handleChangePage}
