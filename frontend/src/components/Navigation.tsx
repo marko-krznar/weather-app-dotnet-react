@@ -22,6 +22,7 @@ export default function Navigation() {
 	const handleSearch = async () => {
 		try {
 			await triggerGetSearchHistory().unwrap();
+			navigate("/search-history");
 		} catch (error) {
 			console.error("Greška pri dohvaćanju povijesti pretraga:", error);
 		}

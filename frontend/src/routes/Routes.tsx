@@ -3,6 +3,7 @@ import RegistationPage from "../pages/RegistationPage";
 import LoginPage from "../pages/LoginPage";
 import WeatherPage from "../pages/WeatherPage";
 import ProtectedRoute from "../components/ProtectedRoute";
+import SearchHistoryPage from "../pages/SearchHistoryPage";
 
 export default function AppRoutes() {
 	return (
@@ -12,6 +13,7 @@ export default function AppRoutes() {
 			</Route>
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/register" element={<RegistationPage />} />
+			<Route path="/search-history" element={<SearchHistoryPage />} />
 		</Routes>
 	);
 }
