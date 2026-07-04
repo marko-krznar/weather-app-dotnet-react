@@ -11,9 +11,9 @@ export const weather = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: import.meta.env.VITE_API_BASE_URL,
 		prepareHeaders: (headers) => {
-			const token = localStorage.getItem("token");
+			const token = localStorage.getItem("accessToken");
 			if (token) {
-				headers.set("authorization", `Bearer ${token}`);
+				headers.set("Authorization", `Bearer ${token}`);
 			}
 			return headers;
 		},
@@ -45,6 +45,7 @@ export const weather = createApi({
 				method: "GET",
 				params: { q: cityName },
 			}),
+			keepUnusedDataFor: 0, // <-- KLJUČNO: Briše cache odmah čim query završi, tjerajući svaki "Traži" klik na backend
 		}),
 	}),
 });

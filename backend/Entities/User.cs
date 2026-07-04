@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Entities
@@ -11,5 +13,7 @@ namespace backend.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        public ICollection<UserSearch> Searches { get; set; } = new List<UserSearch>();
     }
 }

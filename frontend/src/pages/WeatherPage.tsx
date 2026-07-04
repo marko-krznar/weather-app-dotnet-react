@@ -11,15 +11,17 @@ import {
 
 export default function WeatherPage() {
 	const { lat, lon } = useSelector((state: RootStore) => state.ui);
-	const { data: currentWeather } = useGetCurrentWeatherQuery({
-		lat: lat,
-		lon: lon,
-	});
+	const hasCoords = lat !== null && lon !== null;
 
-	const { data: forecast } = useGetWeatherForFiveDaysQuery({
-		lat: lat,
-		lon: lon,
-	});
+	const { data: currentWeather } = useGetCurrentWeatherQuery(
+		{ lat: lat!, lon: lon! },
+		{ skip: !hasCoords }
+	);
+
+	const { data: forecast } = useGetWeatherForFiveDaysQuery(
+		{ lat: lat!, lon: lon! },
+		{ skip: !hasCoords }
+	);
 
 	return (
 		<>
