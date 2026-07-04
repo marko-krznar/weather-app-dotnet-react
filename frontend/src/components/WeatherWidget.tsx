@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 
-// Definiramo TypeScript tip na temelju tvog JSON odgovora
 export interface WeatherWidgetProps {
 	name: string;
 	weather: Array<{ description: string; icon: string; main: string }>;
@@ -31,7 +30,6 @@ export default function WeatherWidget({
 	wind,
 }: WeatherWidgetProps) {
 	const weatherInfo = weather[0];
-	// Službeni URL za OpenWeatherMap ikone
 	const iconUrl = `https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png`;
 
 	return (
@@ -44,12 +42,9 @@ export default function WeatherWidget({
 			}}
 		>
 			<CardContent>
-				{/* Grad i država */}
 				<Typography variant="h5" gutterBottom>
 					{name}
 				</Typography>
-
-				{/* Glavni blok: Temperatura i Ikona */}
 				<Stack direction="row" sx={{ my: 2 }}>
 					<Box>
 						<Typography variant="h3">{main.temp}°C</Typography>
@@ -71,8 +66,6 @@ export default function WeatherWidget({
 						</Typography>
 					</Box>
 				</Stack>
-
-				{/* Dodatni detalji o vremenu */}
 				<Stack sx={{ mt: 3, pt: 2, borderTop: "1px solid #eee" }}>
 					<Box>
 						<Typography variant="caption" color="text.secondary">

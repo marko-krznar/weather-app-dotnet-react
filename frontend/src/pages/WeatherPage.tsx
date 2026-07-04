@@ -1,36 +1,32 @@
+import { useSelector } from "react-redux";
 import Navigation from "../components/Navigation";
+import SearchCity from "../components/SearchCity";
 import WeatherForecast from "../components/WeatherForecast";
 import WeatherWidget from "../components/WeatherWidget";
+import type { RootStore } from "../redux/store";
 import {
 	useGetCurrentWeatherQuery,
 	useGetWeatherForFiveDaysQuery,
 } from "../redux/weather/weatherSlice";
 
 export default function WeatherPage() {
-	const {
-		data: currentWeather,
-		isLoading: currentLoading,
-		isError: currentError,
-	} = useGetCurrentWeatherQuery({
-		lat: 52.2297,
-		lon: 21.0122,
-	});
+	const { lat, lon } = useSelector((state: RootStore) => state.ui);
+	const hasCoords = lat !== null && lon !== null;
 
-	const {
-		data: forecast,
-		isLoading: forecastLoading,
-		isError: forecastError,
-	} = useGetWeatherForFiveDaysQuery({
-		lat: 52.2297,
-		lon: 21.0122,
-	});
+	const { data: currentWeather } = useGetCurrentWeatherQuery(
+		{ lat: lat!, lon: lon! },
+		{ skip: !hasCoords }
+	);
 
-	console.log(currentLoading, currentError, forecastLoading, forecastError);
-	console.log("forecast", forecast);
+	const { data: forecast } = useGetWeatherForFiveDaysQuery(
+		{ lat: lat!, lon: lon! },
+		{ skip: !hasCoords }
+	);
 
 	return (
 		<>
 			<Navigation />
+			<SearchCity />
 			{currentWeather && (
 				<WeatherWidget
 					name={currentWeather.name}
