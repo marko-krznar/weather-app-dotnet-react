@@ -13,7 +13,7 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Osigurava da su sve rute zaštićene i da token mora biti poslan
+    [Authorize]
     public class OpenWeatherController : ControllerBase
     {
         private readonly HttpClient _httpClient;
@@ -69,14 +69,12 @@ namespace backend.Controllers
 
             var content = await response.Content.ReadAsStringAsync();
 
-            // Provjera vraća li OpenWeather stvarne lokacije
             var locations = System.Text.Json.JsonSerializer.Deserialize<List<object>>(content);
             if (locations == null || locations.Count == 0)
             {
                 return NotFound(new { message = $"Grad '{q}' nije pronađen." });
             }
 
-            // TEK SADA spremamo pretragu u bazu jer znamo da grad postoji
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
                             ?? User.FindFirst("sub")?.Value
                             ?? User.FindFirst("id")?.Value;
