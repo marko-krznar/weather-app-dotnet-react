@@ -4,16 +4,20 @@ import LoginPage from "../pages/LoginPage";
 import WeatherPage from "../pages/WeatherPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import SearchHistoryPage from "../pages/SearchHistoryPage";
+import MainLayout from "../components/MainLayout";
 
 export default function AppRoutes() {
 	return (
 		<Routes>
-			<Route element={<ProtectedRoute />}>
-				<Route path="/" element={<WeatherPage />} />
+			<Route element={<MainLayout />}>
+				<Route element={<ProtectedRoute />}>
+					<Route path="/" element={<WeatherPage />} />
+				</Route>
+				<Route path="/search-history" element={<SearchHistoryPage />} />
 			</Route>
+
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/register" element={<RegistationPage />} />
-			<Route path="/search-history" element={<SearchHistoryPage />} />
 		</Routes>
 	);
 }
