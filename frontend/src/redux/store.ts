@@ -3,20 +3,20 @@ import { auth } from "./auth/authSlice";
 import { weather } from "./weather/weatherSlice";
 import ui from "./ui/uiSlice";
 import { rtkQueryErrorLogger } from "./errorMiddleware";
-import { searchHistory } from "./search-history/searchHistory";
+import { search } from "./search/search";
 
 export const store = configureStore({
 	reducer: {
 		[auth.reducerPath]: auth.reducer,
 		[weather.reducerPath]: weather.reducer,
-		[searchHistory.reducerPath]: searchHistory.reducer,
+		[search.reducerPath]: search.reducer,
 		ui: ui,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
 			.concat(auth.middleware)
 			.concat(weather.middleware)
-			.concat(searchHistory.middleware)
+			.concat(search.middleware)
 			.concat(rtkQueryErrorLogger),
 });
 
