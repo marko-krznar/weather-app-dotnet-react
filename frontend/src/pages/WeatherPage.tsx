@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import Navigation from "../components/Navigation";
 import SearchCity from "../components/SearchCity";
 import WeatherForecast from "../components/WeatherForecast";
 import WeatherWidget from "../components/WeatherWidget";
@@ -25,7 +24,6 @@ export default function WeatherPage() {
 
 	return (
 		<>
-			<Navigation />
 			<SearchCity />
 			{currentWeather && (
 				<WeatherWidget
