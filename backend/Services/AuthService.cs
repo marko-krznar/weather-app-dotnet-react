@@ -72,16 +72,28 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
     private async Task<User?> ValidateRefreshTokenAsync(int userId, string refreshToken)
     {
         var user = await context.Users.FindAsync(userId);
-        if (user is null || user.RefreshToken != refreshToken
+        if (user is null || string.IsNullOrEmpty(user.RefreshToken)
             || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             return null;
         }
-
+        var incomingHash = HashRefreshToken(refreshToken);
+        if (!CryptographicOperations.FixedTimeEquals(
+                Encoding.UTF8.GetBytes(incomingHash),
+                Encoding.UTF8.GetBytes(user.RefreshToken)))
+        {
+            return null;
+        }
         return user;
     }
+    private static string HashRefreshToken(string token)
+    {
+        var bytes = Encoding.UTF8.GetBytes(token);
+        var hash = SHA256.HashData(bytes);
+        return Convert.ToBase64String(hash);
+    }
 
-    private string GenerateRefreshToken()
+    private static string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
@@ -92,7 +104,7 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
     private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
     {
         var refreshToken = GenerateRefreshToken();
-        user.RefreshToken = refreshToken;
+        user.RefreshToken = HashRefreshToken(refreshToken);
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
         await context.SaveChangesAsync();
         return refreshToken;
