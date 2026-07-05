@@ -1,5 +1,7 @@
-import { Card, CardContent, Typography, Stack, TextField, Button, Slider, Box } from "@mui/material";
+import { Card, CardContent, Typography, Stack, Button, Slider, Box } from "@mui/material";
 import type { ForecastFiltersProps } from "../../types/weather";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 
 export default function ForecastFilters({
 	tempBounds,
@@ -9,11 +11,14 @@ export default function ForecastFilters({
 	endDateInput,
 	setEndDateInput,
 	onApply,
-	onClear,
+	hasChanges,
 }: ForecastFiltersProps) {
 	const handleSliderChange = (_event: Event, newValue: number | number[]) => {
 		setTempBounds(newValue as [number, number]);
 	};
+
+	const startValue = startDateInput ? dayjs(startDateInput) : null;
+	const endValue = endDateInput ? dayjs(endDateInput) : null;
 
 	return (
 		<Card>
@@ -36,27 +41,26 @@ export default function ForecastFilters({
 							valueLabelFormat={(value) => `${value} °C`}
 						/>
 					</Box>
-					<TextField
+					<DatePicker
 						label="Od datuma"
-						type="date"
-						fullWidth
-						value={startDateInput}
-						onChange={(e) => setStartDateInput(e.target.value)}
+						value={startValue}
+						format="DD/MM/YYYY"
+						disablePast
+						onChange={(newValue: Dayjs | null) => {
+							setStartDateInput(newValue ? newValue.format("YYYY-MM-DD") : "");
+						}}
 					/>
-
-					<TextField
+					<DatePicker
 						label="Do datuma"
-						type="date"
-						fullWidth
-						value={endDateInput}
-						onChange={(e) => setEndDateInput(e.target.value)}
+						format="DD/MM/YYYY"
+						value={endValue}
+						onChange={(newValue: Dayjs | null) => {
+							setEndDateInput(newValue ? newValue.format("YYYY-MM-DD") : "");
+						}}
 					/>
 				</Stack>
-				<Stack sx={{ mt: 3 }}>
-					<Button variant="outlined" color="secondary" onClick={onClear}>
-						Očisti filtere
-					</Button>
-					<Button variant="contained" color="primary" onClick={onApply}>
+				<Stack spacing={2} sx={{ mt: 3 }}>
+					<Button variant="contained" color="primary" onClick={onApply} disabled={!hasChanges}>
 						Filtriraj
 					</Button>
 				</Stack>

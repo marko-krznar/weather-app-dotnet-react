@@ -1,3 +1,7 @@
+export interface ForecastSectionProps {
+	apiList: ApiForecastItem[];
+	cityName: string;
+}
 export interface ApiForecastItem {
 	dt: number;
 	dt_txt: string;
@@ -48,7 +52,7 @@ export interface ForecastFiltersProps {
 	endDateInput: string;
 	setEndDateInput: (value: string) => void;
 	onApply: () => void;
-	onClear: () => void;
+	hasChanges: boolean;
 }
 
 export interface GridRow {

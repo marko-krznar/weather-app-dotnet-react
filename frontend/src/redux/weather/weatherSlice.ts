@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type {
-	WeatherArgs,
-	WeatherWidgetProps,
-} from "../../components/weather/WeatherWidget";
+
 import type { GeocodeLocation } from "../../types/geocode";
-import type { ForecastChartProps } from "../../components/weather/ForecastChart";
+import type { ForecastChartProps, WeatherArgs, WeatherWidgetProps } from "../../types/weather";
 
 export const weather = createApi({
 	reducerPath: "weather",
