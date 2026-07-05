@@ -17,7 +17,9 @@ import dayjs from "dayjs";
 export default function SearchHistoryPage() {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
-	const { data: historyData } = useGetSearchHistoryQuery({ page, limit: rowsPerPage });
+
+	const token = localStorage.getItem("accessToken");
+	const { data: historyData } = useGetSearchHistoryQuery({ page, limit: rowsPerPage }, { skip: !token });
 
 	const visibleRows = historyData?.items;
 	const totalCount = historyData?.totalCount || 0;
