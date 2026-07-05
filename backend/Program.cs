@@ -5,8 +5,11 @@ using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 
 builder.Services.AddOpenApi();
 
@@ -28,7 +31,6 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -58,6 +60,12 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+
+builder.Configuration.AddEnvironmentVariables();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var token = builder.Configuration["AppSettings:Token"];
+var apiKey = builder.Configuration["OpenWeatherSettings:ApiKey"];
 
 var app = builder.Build();
 

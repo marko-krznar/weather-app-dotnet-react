@@ -51,9 +51,9 @@ export interface ForecastFiltersProps {
 	tempBounds: [number, number];
 	setTempBounds: React.Dispatch<React.SetStateAction<[number, number]>>;
 	startDateInput: string;
-	setStartDateInput: (value: string) => void;
+	setStartDateInput: (_value: string) => void;
 	endDateInput: string;
-	setEndDateInput: (value: string) => void;
+	setEndDateInput: (_value: string) => void;
 	onApply: () => void;
 	hasChanges: boolean;
 }

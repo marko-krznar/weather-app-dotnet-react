@@ -3,7 +3,7 @@ import Routes from "./routes/Routes";
 import GlobalError from "./components/GlobalError";
 import GlobalLoading from "./components/GlobalLoading";
 
-function App() {
+export default function App() {
 	return (
 		<Container
 			sx={{
@@ -18,5 +18,3 @@ function App() {
 		</Container>
 	);
 }
-
-export default App;
