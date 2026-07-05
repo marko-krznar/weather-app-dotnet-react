@@ -1,3 +1,5 @@
+import type { Dayjs } from "dayjs";
+
 export interface ForecastSectionProps {
 	apiList: ApiForecastItem[];
 	cityName: string;
@@ -27,6 +29,7 @@ export interface ChartRow {
 	pressure: number;
 	wind: number;
 	description: string;
+	rawDate: Dayjs;
 }
 
 export interface HumidityPieProps {

@@ -28,10 +28,10 @@ export default function ForecastSection({ apiList, cityName }: ForecastSectionPr
 		activeEndDate !== "";
 
 	const hasUnappliedChanges =
-		tempBounds[0] !== DEFAULT_TEMP_BOUNDS[0] ||
-		tempBounds[1] !== DEFAULT_TEMP_BOUNDS[1] ||
-		startDateInput !== "" ||
-		endDateInput !== "";
+		tempBounds[0] !== activeTempBounds[0] ||
+		tempBounds[1] !== activeTempBounds[1] ||
+		startDateInput !== activeStartDate ||
+		endDateInput !== activeEndDate;
 
 	const handleApplyFilters = () => {
 		setActiveTempBounds(tempBounds);
@@ -59,13 +59,20 @@ export default function ForecastSection({ apiList, cityName }: ForecastSectionPr
 				pressure: item.main.pressure,
 				wind: item.wind.speed,
 				description: item.weather[0]?.description || "",
+				rawDate: dayjs(item.dt_txt),
 			})
 		)
 		.filter((row: ChartRow) => {
 			const matchesTemp = row.temperature >= activeTempBounds[0] && row.temperature <= activeTempBounds[1];
-			const rowDate = row.date.split(" ")[0];
-			const matchesStartDate = activeStartDate ? rowDate >= activeStartDate : true;
-			const matchesEndDate = activeEndDate ? rowDate <= activeEndDate : true;
+			const rowDateStartOfDay = row.rawDate.startOf("day");
+
+			const matchesStartDate = activeStartDate
+				? rowDateStartOfDay.isAfter(dayjs(activeStartDate).subtract(1, "day"))
+				: true;
+
+			const matchesEndDate = activeEndDate
+				? rowDateStartOfDay.isBefore(dayjs(activeEndDate).add(1, "day"))
+				: true;
 
 			return matchesTemp && matchesStartDate && matchesEndDate;
 		});
