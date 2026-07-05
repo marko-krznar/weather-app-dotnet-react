@@ -10,39 +10,36 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import { useState } from "react";
+import PasswordInput from "../components/common/PasswordInput";
+import Alert from "@mui/material/Alert";
 
 export default function RegistationPage() {
 	const navigate = useNavigate();
 	const [register, { isLoading, isError, error }] = useRegisterMutation();
+	const [isSuccess, setIsSuccess] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
 		username: "",
 		email: "",
 		password: "",
 	});
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	};
-
 	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
 			await register(formData).unwrap();
+			setIsSuccess(true);
+			setTimeout(() => {
+				navigate("/login");
+			}, 2000);
 		} catch (err) {
+			setIsSuccess(false);
 			console.error("Greška pri prijavi:", err);
 		}
 	};
 
 	return (
-		<Stack
-			spacing={2}
-			sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
-		>
+		<Stack spacing={2} sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
 			<Card
 				component="form"
 				onSubmit={handleSubmit}
@@ -61,45 +58,35 @@ export default function RegistationPage() {
 						gap: 2,
 					}}
 				>
-					<Typography
-						variant="h2"
-						align="center"
-						sx={{ textTransform: "uppercase" }}
-					>
+					<Typography variant="h2" component="p" align="center" sx={{ textTransform: "uppercase" }}>
 						Regitriraj se
 					</Typography>
 					<Typography variant="body1" align="center" gutterBottom>
-						Za korištenje WeatherApp-a potrebno je kreirati
-						korisnički profil. Nakon registracije moći ćete
-						pretraživati gradove te pregledavati trenutačno vrijeme
-						i petodnevnu vremensku prognozu.
+						Za korištenje WeatherApp-a potrebno je kreirati korisnički profil. Nakon registracije moći ćete
+						pretraživati gradove te pregledavati trenutačno vrijeme i petodnevnu vremensku prognozu.
 					</Typography>
 					{isError && (
-						<Typography variant="body1">
-							{error &&
-								String((error as FetchBaseQueryError).data)}
-						</Typography>
+						<Typography variant="body1">{error && String((error as FetchBaseQueryError).data)}</Typography>
 					)}
 					<TextField
 						label="Username"
 						name="username"
 						value={formData.username}
-						onChange={handleChange}
+						onChange={(e) => setFormData((prev) => ({ ...prev, username: e.target.value }))}
 						required
 					/>
 					<TextField
 						label="Email"
 						name="email"
 						value={formData.email}
-						onChange={handleChange}
+						onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
 						required
 					/>
-					<TextField
-						label="Password"
-						name="password"
-						type="password"
+					<PasswordInput
 						value={formData.password}
-						onChange={handleChange}
+						onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+						showPassword={showPassword}
+						onToggleShowPassword={() => setShowPassword(!showPassword)}
 						required
 					/>
 				</CardContent>
@@ -107,24 +94,31 @@ export default function RegistationPage() {
 					<Button
 						type="submit"
 						variant="contained"
-						disabled={
-							isLoading ||
-							!formData.username ||
-							!formData.email ||
-							!formData.password
-						}
+						disabled={isLoading || !formData.username || !formData.email || !formData.password}
 					>
 						{isLoading ? "Prijava u tijeku..." : "Kreiraj"}
 					</Button>
 				</CardActions>
 			</Card>
-			<Button
-				variant="text"
-				startIcon={<KeyboardBackspaceIcon />}
-				onClick={() => navigate("/login")}
-			>
+			<Button variant="text" startIcon={<KeyboardBackspaceIcon />} onClick={() => navigate("/login")}>
 				Povratak na prijavu
 			</Button>
+			{isSuccess && (
+				<Alert
+					variant="filled"
+					severity="success"
+					sx={{
+						position: "absolute",
+						top: 16,
+						left: 16,
+						right: 16,
+						zIndex: 10,
+					}}
+				>
+					Korisnik je uspješno registriran. Za nekoliko sekundi bit ćete automatski preusmjereni na stranicu
+					za prijavu.
+				</Alert>
+			)}
 		</Stack>
 	);
 }
