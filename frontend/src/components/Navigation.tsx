@@ -5,6 +5,7 @@ import { auth } from "../redux/auth/authSlice";
 import { weather } from "../redux/weather/weatherSlice";
 import { Divider, IconButton, Stack } from "@mui/material";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import { search } from "../redux/search/search";
 
 export default function Navigation() {
 	const navigate = useNavigate();
@@ -12,12 +13,14 @@ export default function Navigation() {
 	const location = useLocation();
 
 	const handleLogout = () => {
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
+		navigate("/login");
+
 		dispatch(auth.util.resetApiState());
 		dispatch(weather.util.resetApiState());
+		dispatch(search.util.resetApiState());
 
-		navigate("/login");
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
 	};
 
 	const getVariant = (path) => (location.pathname === path ? "contained" : "text");

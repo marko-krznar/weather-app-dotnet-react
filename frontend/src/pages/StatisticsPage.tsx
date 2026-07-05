@@ -5,7 +5,8 @@ import { useGetSearchStatsQuery } from "../redux/search/search";
 import WeatherDistribution from "../components/search/WeatherDistribution";
 
 export default function SearchStats() {
-	const { data } = useGetSearchStatsQuery();
+	const token = localStorage.getItem("accessToken");
+	const { data } = useGetSearchStatsQuery(undefined, { skip: !token });
 
 	return (
 		<>

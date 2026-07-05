@@ -20,7 +20,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("history")]
-        public async Task<IActionResult> GetSearchHistory()
+        public async Task<IActionResult> GetSearchHistory([FromQuery] int page = 0, [FromQuery] int limit = 10)
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                             ?? User.FindFirst("sub")?.Value
@@ -28,9 +28,13 @@ namespace backend.Controllers
 
             if (!string.IsNullOrEmpty(userIdStr) && int.TryParse(userIdStr, out int userId))
             {
-                var history = await _context.UserSearches
-                    .Where(search => search.UserId == userId)
+                var query = _context.UserSearches.Where(search => search.UserId == userId);
+                var totalCount = await query.CountAsync();
+
+                var items = await query
                     .OrderByDescending(search => search.SearchedAt)
+                    .Skip(page * limit)
+                    .Take(limit)
                     .Select(search => new
                     {
                         search.Id,
@@ -43,7 +47,11 @@ namespace backend.Controllers
                     })
                     .ToListAsync();
 
-                return Ok(history);
+                return Ok(new
+                {
+                    items,
+                    totalCount
+                });
             }
 
             return Unauthorized("Korisnik nije prepoznat.");

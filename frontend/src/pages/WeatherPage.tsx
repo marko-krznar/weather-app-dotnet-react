@@ -13,12 +13,13 @@ export default function WeatherPage() {
 	const { lat, lon, selectedCityName } = useSelector((state: RootStore) => state.ui);
 	const hasCoords = lat !== null && lon !== null && (lat !== 0 || lon !== 0);
 	const hasCoordsAndName = lat !== null && lon !== null && !!selectedCityName;
+	const token = localStorage.getItem("accessToken");
 
 	const { data: currentWeather } = useGetCurrentWeatherQuery(
 		{ lat: lat!, lon: lon!, cityName: selectedCityName },
-		{ skip: !hasCoordsAndName }
+		{ skip: !hasCoordsAndName || !token }
 	);
-	const { data: forecast } = useGetWeatherForFiveDaysQuery({ lat: lat!, lon: lon! }, { skip: !hasCoords });
+	const { data: forecast } = useGetWeatherForFiveDaysQuery({ lat: lat!, lon: lon! }, { skip: !hasCoords || !token });
 
 	const apiList = forecast && "list" in forecast ? (forecast.list as ApiForecastItem[]) : [];
 
