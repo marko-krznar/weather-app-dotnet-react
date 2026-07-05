@@ -1,8 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type {
-	SearchHistoryItem,
-	SearchStatsResponse,
-} from "../../types/search/search";
+import type { SearchHistoryItem, SearchStatsResponse } from "../../types/search";
 
 export const search = createApi({
 	reducerPath: "search",
