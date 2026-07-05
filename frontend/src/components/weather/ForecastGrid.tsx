@@ -1,6 +1,9 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import type { ForecastGridProps } from "../../types/weather";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const columns: GridColDef[] = [
 	{ field: "date", headerName: "Datum i vrijeme", flex: 1.2 },
@@ -20,6 +23,8 @@ export default function ForecastGrid({ rows }: ForecastGridProps) {
 					<DataGrid
 						rows={rows}
 						columns={columns}
+						disableColumnMenu
+						disableColumnSorting
 						pageSizeOptions={[5, 10]}
 						initialState={{
 							pagination: { paginationModel: { pageSize: 5 } },

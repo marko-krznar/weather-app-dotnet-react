@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useLazyGetCoordsByCityNameQuery } from "../redux/weather/weatherSlice";
 import { setLocation } from "../redux/ui/uiSlice";
 import { useDispatch } from "react-redux";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
 
 export default function SearchCity() {
 	const [cityName, setCityName] = useState("");
@@ -18,7 +18,9 @@ export default function SearchCity() {
 		setCityName(event.target.value);
 	};
 
-	const handleSearch = async () => {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
 		if (!cityName.trim()) return;
 
 		try {
@@ -34,7 +36,19 @@ export default function SearchCity() {
 	};
 
 	return (
-		<Paper component="form" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 400 }}>
+		<Box
+			component="form"
+			onSubmit={handleSubmit}
+			sx={{
+				display: "flex",
+				alignItems: "center",
+				width: 400,
+				border: "1px solid",
+				borderColor: "divider",
+				borderRadius: 1,
+				paddingInline: 1,
+			}}
+		>
 			<InputBase
 				sx={{ ml: 1, flex: 1 }}
 				placeholder="Unesi ime grada"
@@ -52,9 +66,9 @@ export default function SearchCity() {
 				<CloseIcon />
 			</IconButton>
 			<Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-			<Button variant="text" onClick={handleSearch} disabled={!cityName.trim()}>
+			<Button variant="text" type="submit" disabled={!cityName.trim()}>
 				Traži
 			</Button>
-		</Paper>
+		</Box>
 	);
 }

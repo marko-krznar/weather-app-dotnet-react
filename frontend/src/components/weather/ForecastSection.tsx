@@ -5,7 +5,12 @@ import ForecastGrid from "./ForecastGrid";
 import ForecastChart from "./ForecastChart";
 import type { ChartRow, ForecastSectionProps } from "../../types/weather";
 import { DEFAULT_TEMP_BOUNDS } from "../../constants/weatherConstants";
-import { Button, Collapse, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import { roundTemperature } from "../../utils/weatherHelpers";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
+import Alert from "@mui/material/Alert";
 
 export default function ForecastSection({ apiList, cityName }: ForecastSectionProps) {
 	const [tempBounds, setTempBounds] = useState<[number, number]>(DEFAULT_TEMP_BOUNDS);
@@ -48,8 +53,8 @@ export default function ForecastSection({ apiList, cityName }: ForecastSectionPr
 		.map(
 			(item, index): ChartRow => ({
 				id: index,
-				date: item.dt_txt,
-				temperature: item.main.temp,
+				date: dayjs(item.dt_txt).format("DD.MM.YYYY. HH:mm[h]"),
+				temperature: roundTemperature(item.main.temp),
 				humidity: item.main.humidity,
 				pressure: item.main.pressure,
 				wind: item.wind.speed,
@@ -96,8 +101,17 @@ export default function ForecastSection({ apiList, cityName }: ForecastSectionPr
 					hasChanges={hasUnappliedChanges}
 				/>
 			</Collapse>
-			<ForecastGrid rows={filteredRows} />
-			<ForecastChart rows={filteredRows} />
+			{filteredRows.length > 0 ? (
+				<>
+					<ForecastGrid rows={filteredRows} />
+					<ForecastChart rows={filteredRows} />
+				</>
+			) : (
+				<Alert variant="outlined" severity="warning">
+					Nema rezultata za odabrane filtere. Pokušajte prilagoditi raspon temperature i datuma ili kliknite
+					na "Očisti filtere" za povratak na početni prikaz
+				</Alert>
+			)}
 		</Stack>
 	);
 }
