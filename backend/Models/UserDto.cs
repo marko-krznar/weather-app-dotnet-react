@@ -9,7 +9,7 @@ namespace backend.Models
         [Required]
         public string Password { get; set; } = string.Empty;
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Unesena e-mail adresa nije valjana.")]
         public string Email { get; set; } = string.Empty;
     }
 }

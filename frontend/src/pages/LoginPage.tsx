@@ -8,12 +8,14 @@ import { useLoginMutation } from "../redux/auth/authSlice";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
+import PasswordInput from "../components/common/PasswordInput";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
 
 	const [usernameOrEmail, setUsernameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 
 	const [login, { isLoading }] = useLoginMutation();
 
@@ -28,10 +30,7 @@ export default function LoginPage() {
 	};
 
 	return (
-		<Stack
-			spacing={2}
-			sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
-		>
+		<Stack spacing={2} sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
 			<Card
 				component="form"
 				onSubmit={handleSubmit}
@@ -50,17 +49,12 @@ export default function LoginPage() {
 						gap: 2,
 					}}
 				>
-					<Typography
-						variant="h2"
-						align="center"
-						sx={{ textTransform: "uppercase" }}
-					>
+					<Typography variant="h2" component="p" align="center" sx={{ textTransform: "uppercase" }}>
 						Prijavi se
 					</Typography>
 					<Typography variant="body1" align="center" gutterBottom>
-						Prijavite se kako biste pregledali trenutno vrijeme i
-						detaljnu petodnevnu vremensku prognozu za grad po vašem
-						izboru.
+						Prijavite se kako biste pregledali trenutno vrijeme i detaljnu petodnevnu vremensku prognozu za
+						grad po vašem izboru.
 					</Typography>
 					<TextField
 						id="username-input"
@@ -70,22 +64,16 @@ export default function LoginPage() {
 						onChange={(e) => setUsernameOrEmail(e.target.value)}
 						required
 					/>
-					<TextField
-						id="password-input"
-						label="Password"
-						type="password"
-						variant="outlined"
+					<PasswordInput
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						showPassword={showPassword}
+						onToggleShowPassword={() => setShowPassword(!showPassword)}
 						required
 					/>
 				</CardContent>
 				<CardActions sx={{ padding: "1rem" }}>
-					<Button
-						type="submit"
-						variant="contained"
-						disabled={isLoading || !usernameOrEmail || !password}
-					>
+					<Button type="submit" variant="contained" disabled={isLoading || !usernameOrEmail || !password}>
 						{isLoading ? "Prijava u tijeku..." : "Prijavi se"}
 					</Button>
 				</CardActions>

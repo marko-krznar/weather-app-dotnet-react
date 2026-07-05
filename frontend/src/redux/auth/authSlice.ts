@@ -18,10 +18,7 @@ export const auth = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
-		login: builder.mutation<
-			LoginResponse,
-			{ usernameOrEmail: string; password: string }
-		>({
+		login: builder.mutation<LoginResponse, { usernameOrEmail: string; password: string }>({
 			query: (credentials) => ({
 				url: "/Auth/login",
 				method: "POST",
@@ -36,14 +33,10 @@ export const auth = createApi({
 					localStorage.setItem("accessToken", data.accessToken);
 					localStorage.setItem("refreshToken", data.refreshToken);
 				} catch (error) {
-					console.error(
-						"Greška pri spremanju tokena nakon prijave:",
-						error
-					);
+					console.error("Greška pri spremanju tokena nakon prijave:", error);
 				}
 			},
 		}),
-
 		register: builder.mutation<
 			{ id: number; username: string; passwordHash: string },
 			{ username: string; password: string }
