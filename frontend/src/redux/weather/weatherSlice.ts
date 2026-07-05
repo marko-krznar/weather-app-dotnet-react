@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type {
-	WeatherArgs,
-	WeatherWidgetProps,
-} from "../../components/WeatherWidget";
-import type { ForecastProps } from "../../components/WeatherForecast";
+
 import type { GeocodeLocation } from "../../types/geocode";
+import type { ForecastChartProps, WeatherArgs, WeatherWidgetProps } from "../../types/weather";
 
 export const weather = createApi({
 	reducerPath: "weather",
@@ -29,7 +26,7 @@ export const weather = createApi({
 				},
 			}),
 		}),
-		getWeatherForFiveDays: builder.query<ForecastProps, WeatherArgs>({
+		getWeatherForFiveDays: builder.query<ForecastChartProps, WeatherArgs>({
 			query: ({ lat = 52.2297, lon = 21.0122 }) => ({
 				url: "/OpenWeather/forecast",
 				method: "GET",
@@ -45,7 +42,7 @@ export const weather = createApi({
 				method: "GET",
 				params: { q: cityName },
 			}),
-			keepUnusedDataFor: 0, // <-- KLJUČNO: Briše cache odmah čim query završi, tjerajući svaki "Traži" klik na backend
+			keepUnusedDataFor: 0,
 		}),
 	}),
 });

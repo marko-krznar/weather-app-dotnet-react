@@ -23,6 +23,13 @@ export default function Navigation() {
 			<Button
 				variant="outlined"
 				color="secondary"
+				onClick={() => navigate("/")}
+			>
+				Naslovna
+			</Button>
+			<Button
+				variant="outlined"
+				color="secondary"
 				onClick={() => navigate("/stats")}
 			>
 				Statistika
