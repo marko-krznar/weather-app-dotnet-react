@@ -14,9 +14,12 @@ export const search = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
-		getSearchHistory: builder.query<Array<SearchHistoryItem>, void>({
-			query: () => ({
-				url: "/Search/history",
+		getSearchHistory: builder.query<
+			{ items: Array<SearchHistoryItem>; totalCount: number },
+			{ page: number; limit: number }
+		>({
+			query: ({ page, limit }) => ({
+				url: `Search/history?page=${page}&limit=${limit}`,
 				method: "GET",
 			}),
 			keepUnusedDataFor: 0,
