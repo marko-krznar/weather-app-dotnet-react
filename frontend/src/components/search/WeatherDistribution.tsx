@@ -20,11 +20,7 @@ const CONDITION_MAPPING: { [key: string]: { label: string; color: string } } = {
 
 const DEFAULT_COLOR = "#ab47bc";
 
-export default function WeatherDistribution({
-	data,
-}: WeatherDistributionProps) {
-	console.log("WeatherDistribution data:", data);
-
+export default function WeatherDistribution({ data }: WeatherDistributionProps) {
 	// Transformacija podataka u format koji MUI PieChart očekuje
 	const chartData = data?.map((item, index) => {
 		const mapping = CONDITION_MAPPING[item.condition];
@@ -54,11 +50,7 @@ export default function WeatherDistribution({
 				</Typography>
 
 				{chartData?.length === 0 ? (
-					<Typography
-						variant="body2"
-						color="text.secondary"
-						sx={{ mt: 2 }}
-					>
+					<Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
 						Nema podataka za prikaz.
 					</Typography>
 				) : (

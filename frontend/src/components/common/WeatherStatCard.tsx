@@ -1,15 +1,8 @@
-import { type ReactNode } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
-interface WeatherStatCardProps {
-	icon: ReactNode;
-	title: string;
-	value: string | number;
-	unit: string;
-}
+import type { WeatherStatCardProps } from "../../types/commonComponents";
 
 export default function WeatherStatCard({ icon, title, value, unit }: WeatherStatCardProps) {
 	return (

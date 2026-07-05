@@ -6,7 +6,6 @@ import WeatherDistribution from "../components/search/WeatherDistribution";
 
 export default function SearchStats() {
 	const { data } = useGetSearchStatsQuery();
-	console.log(data);
 
 	return (
 		<>

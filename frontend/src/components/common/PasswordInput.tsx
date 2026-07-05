@@ -5,16 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
-interface PasswordInputProps {
-	value: string;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	showPassword: boolean;
-	onToggleShowPassword: () => void;
-	label?: string;
-	id?: string;
-	required?: boolean;
-}
+import type { PasswordInputProps } from "../../types/commonComponents";
 
 export default function PasswordInput({
 	value,
