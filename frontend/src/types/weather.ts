@@ -87,3 +87,9 @@ export interface WeatherArgs {
 	lat: number;
 	lon: number;
 }
+
+export interface WeatherCurrentArgs {
+	lat: number;
+	lon: number;
+	cityName: string;
+}

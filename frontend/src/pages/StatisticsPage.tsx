@@ -15,10 +15,10 @@ export default function SearchStats() {
 				</Typography>
 			</Box>
 			{data && (
-				<Stack sx={{ gap: 3 }}>
+				<Stack sx={{ gap: 3, flexWrap: "wrap" }} direction="row">
 					<TopCities data={data.topCities} />
-					<LatestSearches data={data.latestSearches} />
 					<WeatherDistribution data={data.conditionDistribution} />
+					<LatestSearches data={data.latestSearches} />
 				</Stack>
 			)}
 		</>
