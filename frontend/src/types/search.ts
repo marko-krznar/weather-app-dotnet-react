@@ -42,3 +42,12 @@ export interface LatestSearch {
 export interface LatestSearchesProps {
 	data: Array<LatestSearch>;
 }
+
+export interface LatestWeatherCardItemProps {
+	dateTime: string;
+	searchTerm: string;
+	pressure: number;
+	temperature: number;
+	weatherCondition: string;
+	windSpeed: number;
+}
