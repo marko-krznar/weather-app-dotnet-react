@@ -1,60 +1,23 @@
-import {
-	Card,
-	CardContent,
-	Typography,
-	List,
-	ListItem,
-	ListItemText,
-} from "@mui/material";
-
-interface LatestSearch {
-	searchTerm: string;
-	searchedAt: string;
-}
-
-interface LatestSearchesProps {
-	data: Array<LatestSearch>;
-}
+import Card from "@mui/material/Card";
+import type { LatestSearchesProps } from "../../types/search";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 
 export default function LatestSearches({ data }: LatestSearchesProps) {
-	const formatDateTime = (dateString: string) => {
-		const date = new Date(dateString);
-		return (
-			date.toLocaleTimeString("hr-HR", {
-				hour: "2-digit",
-				minute: "2-digit",
-			}) +
-			" - " +
-			date.toLocaleDateString("hr-HR")
-		);
-	};
-
 	return (
-		<Card sx={{ minWidth: 275, boxShadow: 3 }}>
-			<CardContent>
-				<Typography
-					variant="h6"
-					component="div"
-					gutterBottom
-					sx={{
-						fontWeight: "bold",
-						display: "flex",
-						alignItems: "center",
-						gap: 1,
-					}}
-				>
+		<Card sx={{ minWidth: "100%", flex: 1 }}>
+			<CardContent sx={{ padding: 4 }}>
+				<Typography variant="h5" component="h3" gutterBottom>
 					Najnovije Pretrage
 				</Typography>
-				<List>
-					{data.map((item, index) => (
-						<ListItem key={index} divider={index < data.length - 1}>
-							<ListItemText
-								primary={item.searchTerm}
-								secondary={formatDateTime(item.searchedAt)}
-							/>
-						</ListItem>
-					))}
-				</List>
+				{data.map((item) => (
+					<Typography key={item.id} variant="body1">
+						{dayjs(item.searchedAt).format("HH:mm - DD.MM.YYYY.")}
+						{item.searchTerm}
+						{item.pressure} hPa, {item.temperature}°C, {item.weatherCondition}, {item.windSpeed} m/s
+					</Typography>
+				))}
 			</CardContent>
 		</Card>
 	);

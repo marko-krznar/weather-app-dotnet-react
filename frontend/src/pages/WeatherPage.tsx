@@ -11,9 +11,13 @@ import Stack from "@mui/material/Stack";
 
 export default function WeatherPage() {
 	const { lat, lon, selectedCityName } = useSelector((state: RootStore) => state.ui);
-	const hasCoords = lat !== null && lon !== null;
+	const hasCoords = lat !== null && lon !== null && (lat !== 0 || lon !== 0);
+	const hasCoordsAndName = lat !== null && lon !== null && !!selectedCityName;
 
-	const { data: currentWeather } = useGetCurrentWeatherQuery({ lat: lat!, lon: lon! }, { skip: !hasCoords });
+	const { data: currentWeather } = useGetCurrentWeatherQuery(
+		{ lat: lat!, lon: lon!, cityName: selectedCityName },
+		{ skip: !hasCoordsAndName }
+	);
 	const { data: forecast } = useGetWeatherForFiveDaysQuery({ lat: lat!, lon: lon! }, { skip: !hasCoords });
 
 	const apiList = forecast && "list" in forecast ? (forecast.list as ApiForecastItem[]) : [];

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import type { GeocodeLocation } from "../../types/geocode";
-import type { ForecastChartProps, WeatherArgs, WeatherWidgetProps } from "../../types/weather";
+import type { ForecastChartProps, WeatherArgs, WeatherCurrentArgs, WeatherWidgetProps } from "../../types/weather";
 
 export const weather = createApi({
 	reducerPath: "weather",
@@ -16,18 +16,19 @@ export const weather = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
-		getCurrentWeather: builder.query<WeatherWidgetProps, WeatherArgs>({
-			query: ({ lat = 52.2297, lon = 21.0122 }) => ({
+		getCurrentWeather: builder.query<WeatherWidgetProps, WeatherCurrentArgs>({
+			query: ({ lat, lon, cityName }) => ({
 				url: "/OpenWeather/current",
 				method: "GET",
 				params: {
 					lat: lat,
 					lon: lon,
+					cityName: cityName,
 				},
 			}),
 		}),
 		getWeatherForFiveDays: builder.query<ForecastChartProps, WeatherArgs>({
-			query: ({ lat = 52.2297, lon = 21.0122 }) => ({
+			query: ({ lat, lon }) => ({
 				url: "/OpenWeather/forecast",
 				method: "GET",
 				params: {

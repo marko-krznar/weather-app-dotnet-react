@@ -12,16 +12,11 @@ namespace backend.Controllers
     [Authorize]
     public class SearchController : ControllerBase
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
         private readonly AppDbContext _context;
 
-        public SearchController(HttpClient httpClient, IConfiguration configuration, AppDbContext context)
+        public SearchController(AppDbContext context)
         {
-            _httpClient = httpClient;
             _context = context;
-            _apiKey = configuration["OpenWeatherSettings:ApiKey"]
-                ?? throw new InvalidOperationException("Kritična greška: 'OpenWeatherSettings:ApiKey' nije konfiguriran!");
         }
 
         [HttpGet("history")]
@@ -40,7 +35,11 @@ namespace backend.Controllers
                     {
                         search.Id,
                         search.SearchTerm,
-                        search.SearchedAt
+                        search.SearchedAt,
+                        search.Temperature,
+                        search.WindSpeed,
+                        search.Pressure,
+                        search.WeatherCondition
                     })
                     .ToListAsync();
 
@@ -73,8 +72,13 @@ namespace backend.Controllers
                         .Take(3)
                         .Select(s => new LatestSearchDto
                         {
+                            Id = s.Id,
                             SearchTerm = s.SearchTerm,
-                            SearchedAt = s.SearchedAt
+                            SearchedAt = s.SearchedAt,
+                            Temperature = s.Temperature,
+                            WindSpeed = s.WindSpeed,
+                            Pressure = s.Pressure,
+                            WeatherCondition = s.WeatherCondition
                         })
                         .ToList(),
 

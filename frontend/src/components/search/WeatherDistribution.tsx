@@ -33,22 +33,11 @@ export default function WeatherDistribution({ data }: WeatherDistributionProps) 
 	});
 
 	return (
-		<Card sx={{ minWidth: 275, boxShadow: 3, height: "100%" }}>
-			<CardContent>
-				<Typography
-					variant="h6"
-					component="div"
-					gutterBottom
-					sx={{
-						fontWeight: "bold",
-						display: "flex",
-						alignItems: "center",
-						gap: 1,
-					}}
-				>
+		<Card sx={{ flex: 1 }}>
+			<CardContent sx={{ padding: 4 }}>
+				<Typography variant="h5" component="h3" gutterBottom>
 					Distribucija Vremenskih Uvjeta
 				</Typography>
-
 				{chartData?.length === 0 ? (
 					<Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
 						Nema podataka za prikaz.

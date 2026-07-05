@@ -23,7 +23,7 @@ const uiSlice = createSlice({
 			action: PayloadAction<{
 				lat: number;
 				lon: number;
-				cityName?: string;
+				cityName: string;
 			}>
 		) => {
 			state.lat = action.payload.lat;

@@ -2,6 +2,10 @@ export interface SearchHistoryItem {
 	id: number;
 	searchTerm: string;
 	searchedAt: string;
+	temperature: number;
+	windSpeed: number;
+	pressure: number;
+	weatherCondition: string;
 }
 
 export interface SearchStatsResponse {
@@ -23,4 +27,18 @@ export interface LatestSearch {
 export interface WeatherDistribution {
 	condition: string;
 	count: number;
+}
+
+export interface LatestSearch {
+	id: number;
+	searchTerm: string;
+	searchedAt: string;
+	pressure: number;
+	temperature: number;
+	weatherCondition: string;
+	windSpeed: number;
+}
+
+export interface LatestSearchesProps {
+	data: Array<LatestSearch>;
 }
