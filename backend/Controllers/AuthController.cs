@@ -10,7 +10,7 @@ namespace backend.Controllers
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<UserResponseDto>> Register(UserDto request)
         {
             var user = await authService.RegisterAsync(request);
 
@@ -19,7 +19,14 @@ namespace backend.Controllers
                 return BadRequest("Korisnik s tim imenom već postoji.");
             }
 
-            return Ok(user);
+            var response = new UserResponseDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            };
+
+            return Ok(response);
         }
 
         [HttpPost("login")]

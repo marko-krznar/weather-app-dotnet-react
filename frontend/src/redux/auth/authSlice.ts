@@ -38,8 +38,8 @@ export const auth = createApi({
 			},
 		}),
 		register: builder.mutation<
-			{ id: number; username: string; passwordHash: string },
-			{ username: string; password: string }
+			{ id: number; username: string; email: string },
+			{ username: string; email: string; password: string }
 		>({
 			query: (userCredentials) => ({
 				url: "/Auth/register",
