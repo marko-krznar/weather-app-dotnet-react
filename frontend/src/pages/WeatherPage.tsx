@@ -11,6 +11,7 @@ import type { ApiForecastItem, ChartRow } from "../types/weather";
 import { DEFAULT_TEMP_BOUNDS } from "../constants/weatherConstants";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 export default function WeatherPage() {
 	const [tempBounds, setTempBounds] = useState<[number, number]>(DEFAULT_TEMP_BOUNDS);
@@ -79,30 +80,32 @@ export default function WeatherPage() {
 				</Typography>
 			</Box>
 			<SearchCity />
-			{currentWeather && (
-				<WeatherWidget
-					name={currentWeather.name}
-					weather={currentWeather.weather}
-					main={currentWeather.main}
-					wind={currentWeather.wind}
-				/>
-			)}
-			{forecast && (
-				<>
-					<ForecastFilters
-						tempBounds={tempBounds}
-						setTempBounds={setTempBounds}
-						startDateInput={startDateInput}
-						setStartDateInput={setStartDateInput}
-						endDateInput={endDateInput}
-						setEndDateInput={setEndDateInput}
-						onApply={handleApplyFilters}
-						onClear={handleClearFilters}
+			<Stack spacing={4} sx={{ mt: 4 }}>
+				{currentWeather && (
+					<WeatherWidget
+						name={currentWeather.name}
+						weather={currentWeather.weather}
+						main={currentWeather.main}
+						wind={currentWeather.wind}
 					/>
-					<ForecastGrid rows={filteredRows} />
-					<ForecastChart rows={filteredRows} />
-				</>
-			)}
+				)}
+				{forecast && (
+					<>
+						<ForecastFilters
+							tempBounds={tempBounds}
+							setTempBounds={setTempBounds}
+							startDateInput={startDateInput}
+							setStartDateInput={setStartDateInput}
+							endDateInput={endDateInput}
+							setEndDateInput={setEndDateInput}
+							onApply={handleApplyFilters}
+							onClear={handleClearFilters}
+						/>
+						<ForecastGrid rows={filteredRows} />
+						<ForecastChart rows={filteredRows} />
+					</>
+				)}
+			</Stack>
 		</>
 	);
 }

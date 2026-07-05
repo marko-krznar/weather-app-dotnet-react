@@ -1,25 +1,13 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
-
-interface ChartRow {
-	date: string;
-	temperature: number;
-	wind: number;
-	humidity: number;
-}
-
-export interface ForecastChartProps {
-	rows: ChartRow[];
-}
+import type { ForecastChartProps } from "../../types/weather";
 
 export default function ForecastChart({ rows }: ForecastChartProps) {
 	const xData = rows.map((r) => {
 		const d = new Date(r.date);
 		return isNaN(d.getTime())
 			? r.date
-			: `${d.getDate().toString().padStart(2, "0")}.${(d.getMonth() + 1)
-					.toString()
-					.padStart(2, "0")}. ${d
+			: `${d.getDate().toString().padStart(2, "0")}.${(d.getMonth() + 1).toString().padStart(2, "0")}. ${d
 					.getHours()
 					.toString()
 					.padStart(2, "0")}:00`;
@@ -28,9 +16,7 @@ export default function ForecastChart({ rows }: ForecastChartProps) {
 	return (
 		<Card>
 			<CardContent>
-				<Typography variant="h6">
-					Grafički prikaz vremenskih parametara
-				</Typography>
+				<Typography variant="h6">Grafički prikaz vremenskih parametara</Typography>
 				<Box sx={{ height: 400, mt: 2 }}>
 					{rows.length > 0 ? (
 						<LineChart
@@ -70,13 +56,8 @@ export default function ForecastChart({ rows }: ForecastChartProps) {
 							}}
 						/>
 					) : (
-						<Typography
-							color="textSecondary"
-							align="center"
-							sx={{ pt: 10 }}
-						>
-							Nema podataka za odabrane uvjete. Kliknite
-							"Filtriraj" ili "Očisti filtere".
+						<Typography color="textSecondary" align="center" sx={{ pt: 10 }}>
+							Nema podataka za odabrane uvjete. Kliknite "Filtriraj" ili "Očisti filtere".
 						</Typography>
 					)}
 				</Box>

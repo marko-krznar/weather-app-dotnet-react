@@ -2,95 +2,36 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
+import { roundTemperature } from "../../utils/weatherHelpers";
+import AirIcon from "@mui/icons-material/Air";
+import CompressIcon from "@mui/icons-material/Compress";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import Divider from "@mui/material/Divider";
+import WeatherStatCard from "../common/WeatherStatCard";
+import type { WeatherWidgetProps } from "../../types/weather";
 
-export interface WeatherWidgetProps {
-	name: string;
-	weather: Array<{ description: string; icon: string; main: string }>;
-	main: {
-		temp: number;
-		feels_like: number;
-		humidity: number;
-		pressure: number;
-	};
-	wind: {
-		speed: number;
-	};
-}
-
-export interface WeatherArgs {
-	lat: number;
-	lon: number;
-}
-
-export default function WeatherWidget({
-	name,
-	weather,
-	main,
-	wind,
-}: WeatherWidgetProps) {
+export default function WeatherWidget({ name, weather, main, wind }: WeatherWidgetProps) {
 	const weatherInfo = weather[0];
 	const iconUrl = `https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png`;
 
 	return (
-		<Card
-			sx={{
-				maxWidth: 350,
-				borderRadius: 3,
-				boxShadow: 3,
-				bgcolor: "background.paper",
-			}}
-		>
+		<Card sx={{ p: 2 }}>
 			<CardContent>
-				<Typography variant="h5" gutterBottom>
-					{name}
-				</Typography>
-				<Stack direction="row" sx={{ my: 2 }}>
-					<Box>
-						<Typography variant="h3">{main.temp}°C</Typography>
-						<Typography variant="body2" color="text.secondary">
-							Osjećaj: {main.temp}°C
+				<Stack direction="row" sx={{ flexGrow: 1 }} spacing={4}>
+					<Stack sx={{ p: 4, justifyContent: "center", alignItems: "center" }} spacing={1}>
+						<Typography variant="h5" gutterBottom>
+							{name}
 						</Typography>
-					</Box>
-					<Box sx={{ textAlign: "center" }}>
-						<img
-							src={iconUrl}
-							alt={weatherInfo.description}
-							style={{ width: 80, height: 80 }}
-						/>
-						<Typography
-							variant="body1"
-							sx={{ textTransform: "capitalize", mt: -1 }}
-						>
-							{weatherInfo.description}
-						</Typography>
-					</Box>
-				</Stack>
-				<Stack sx={{ mt: 3, pt: 2, borderTop: "1px solid #eee" }}>
-					<Box>
-						<Typography variant="caption" color="text.secondary">
-							Vlaga
-						</Typography>
-						<Typography variant="body2">
-							{main.humidity}%
-						</Typography>
-					</Box>
-					<Box>
-						<Typography variant="caption" color="text.secondary">
-							Vjetar
-						</Typography>
-						<Typography variant="body2">
-							{wind.speed} m/s
-						</Typography>
-					</Box>
-					<Box>
-						<Typography variant="caption" color="text.secondary">
-							Tlak
-						</Typography>
-						<Typography variant="body2">
-							{main.pressure} hPa
-						</Typography>
-					</Box>
+						<Typography variant="h3">{roundTemperature(main.temp)}°C</Typography>
+						<img src={iconUrl} alt={weatherInfo.description} style={{ width: 80, height: 80 }} />
+						<Typography variant="body1">{weatherInfo.description}</Typography>
+					</Stack>
+					<Divider orientation="vertical" flexItem />
+					<Stack direction="row" sx={{ flexGrow: 1, alignItems: "center" }} spacing={2}>
+						<WeatherStatCard icon={<WaterDropIcon />} title="Vlaga" value={main.humidity} unit="%" />
+						<WeatherStatCard icon={<AirIcon />} title="Vjetar" value={wind.speed} unit="m/s" />
+						<WeatherStatCard icon={<CompressIcon />} title="Tlak" value={main.pressure} unit="hPa" />
+					</Stack>
 				</Stack>
 			</CardContent>
 		</Card>

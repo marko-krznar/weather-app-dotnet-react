@@ -1,19 +1,6 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-
-interface GridRow {
-	id: number;
-	date: string;
-	temperature: number;
-	humidity: number;
-	pressure: number;
-	wind: number;
-	description: string;
-}
-
-interface ForecastGridProps {
-	rows: GridRow[];
-}
+import type { ForecastGridProps } from "../../types/weather";
 
 const columns: GridColDef[] = [
 	{ field: "date", headerName: "Datum i vrijeme", flex: 1.2 },

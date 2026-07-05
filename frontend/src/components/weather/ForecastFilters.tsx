@@ -1,15 +1,5 @@
 import { Card, CardContent, Typography, Stack, TextField, Button, Slider, Box } from "@mui/material";
-
-interface ForecastFiltersProps {
-	tempBounds: [number, number];
-	setTempBounds: React.Dispatch<React.SetStateAction<[number, number]>>;
-	startDateInput: string;
-	setStartDateInput: (value: string) => void;
-	endDateInput: string;
-	setEndDateInput: (value: string) => void;
-	onApply: () => void;
-	onClear: () => void;
-}
+import type { ForecastFiltersProps } from "../../types/weather";
 
 export default function ForecastFilters({
 	tempBounds,
