@@ -9,8 +9,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import PasswordInput from "../components/common/PasswordInput";
+import { translations, Language } from "../i18n/translations";
 
 export default function LoginPage() {
+	const t = translations[Language.HR];
 	const navigate = useNavigate();
 
 	const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -50,7 +52,7 @@ export default function LoginPage() {
 					}}
 				>
 					<Typography variant="h2" component="p" align="center" sx={{ textTransform: "uppercase" }}>
-						Prijavi se
+						{t.auth.login}
 					</Typography>
 					<Typography variant="body1" align="center" gutterBottom>
 						Prijavite se kako biste pregledali trenutno vrijeme i detaljnu petodnevnu vremensku prognozu za
@@ -58,7 +60,7 @@ export default function LoginPage() {
 					</Typography>
 					<TextField
 						id="username-input"
-						label="Username / Email"
+						label={t.auth.usernameOrEmail}
 						variant="outlined"
 						value={usernameOrEmail}
 						onChange={(e) => setUsernameOrEmail(e.target.value)}
@@ -74,12 +76,12 @@ export default function LoginPage() {
 				</CardContent>
 				<CardActions sx={{ padding: "1rem" }}>
 					<Button type="submit" variant="contained" disabled={isLoading || !usernameOrEmail || !password}>
-						{isLoading ? "Prijava u tijeku..." : "Prijavi se"}
+						{isLoading ? t.auth.loggingIn : t.auth.login}
 					</Button>
 				</CardActions>
 			</Card>
 			<Button variant="text" onClick={() => navigate("/register")}>
-				Kreiraj novi profil
+				{t.auth.createProfile}
 			</Button>
 		</Stack>
 	);

@@ -96,7 +96,7 @@ export default function RegistationPage() {
 						variant="contained"
 						disabled={isLoading || !formData.username || !formData.email || !formData.password}
 					>
-						{isLoading ? "Prijava u tijeku..." : "Kreiraj"}
+						{isLoading ? "Registracija u tijeku..." : "Kreiraj"}
 					</Button>
 				</CardActions>
 			</Card>
