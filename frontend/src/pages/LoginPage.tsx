@@ -10,8 +10,8 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import PasswordInput from "../components/common/PasswordInput";
 import { translations, Language } from "../i18n/translations";
-import { setError, setLocation, startLoading } from "../redux/location/locationSlice";
 import { useDispatch } from "react-redux";
+import { setError, setLocation } from "../redux/ui/uiSlice";
 
 export default function LoginPage() {
 	const t = translations[Language.HR];
@@ -40,14 +40,13 @@ export default function LoginPage() {
 			return;
 		}
 
-		dispatch(startLoading());
-
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				dispatch(
 					setLocation({
 						lat: position.coords.latitude,
-						lng: position.coords.longitude,
+						lon: position.coords.longitude,
+						cityName: "",
 					})
 				);
 			},

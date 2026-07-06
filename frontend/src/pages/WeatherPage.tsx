@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 export default function WeatherPage() {
-	const { lat, lon, selectedCityName } = useSelector((state: RootStore) => state.ui);
+	const { lat, lon } = useSelector((state: RootStore) => state.ui);
 	const hasCoords = lat !== null && lon !== null && (lat !== 0 || lon !== 0);
 	const token = localStorage.getItem("accessToken");
 
@@ -44,7 +44,7 @@ export default function WeatherPage() {
 						wind={currentWeather.wind}
 					/>
 				)}
-				{forecast && <ForecastSection apiList={apiList} cityName={selectedCityName} />}
+				{forecast && currentWeather && <ForecastSection apiList={apiList} cityName={currentWeather.name} />}
 			</Stack>
 		</>
 	);

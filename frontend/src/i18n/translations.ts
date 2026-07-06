@@ -14,6 +14,7 @@ export const translations = {
 			usernameOrEmail: "Korisničko ime / E-mail",
 			password: "Lozinka",
 			createProfile: "Kreiraj novi profil",
+			username: "Korisničko ime",
 		},
 	},
 } as const;
