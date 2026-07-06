@@ -98,8 +98,6 @@ A full-stack application for checking current weather forecasts and search stati
 
     ```
     VITE_API_BASE_URL=https://localhost:7250/api
-    VITE_WEATHER_API_KEY=YOUR_OPENWEATHER_KEY
-    VITE_WEATHER_API_BASE_URL=https://api.openweathermap.org/data/2.5
     ```
 
 4. Start the dev server:
