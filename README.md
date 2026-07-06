@@ -12,7 +12,7 @@ A full-stack application for checking current weather forecasts and search stati
 
 ## Tech Stack
 
-### Backend (`/backend`)
+### Backend
 
 #### Technology
 
@@ -24,7 +24,7 @@ A full-stack application for checking current weather forecasts and search stati
 -   Scalar.AspNetCore
 -   PostgreSQL
 
-#### Frontend (`/frontend`)
+#### Frontend
 
 #### Technology
 
