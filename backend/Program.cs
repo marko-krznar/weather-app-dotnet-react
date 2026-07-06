@@ -33,6 +33,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 builder.Services.AddExceptionHandler<backend.Middleware.GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
