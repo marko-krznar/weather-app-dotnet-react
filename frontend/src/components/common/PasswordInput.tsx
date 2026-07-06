@@ -24,6 +24,7 @@ export default function PasswordInput({
 				label={label}
 				type={showPassword ? "text" : "password"}
 				value={value}
+				required={required}
 				onChange={onChange}
 				endAdornment={
 					<InputAdornment position="end">
