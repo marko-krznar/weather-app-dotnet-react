@@ -22,7 +22,7 @@ namespace backend.Services
                 ?? throw new InvalidOperationException("Kritična greška: 'OpenWeatherSettings:ApiKey' nije konfiguriran!");
         }
 
-        public async Task<string> GetCurrentWeatherAsync(double lat, double lon, string cityName, int? userId)
+        public async Task<string> GetCurrentWeatherAsync(double lat, double lon, int? userId)
         {
             var url = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&lang=en&appid={_apiKey}";
             var response = await _httpClient.GetAsync(url);
@@ -32,7 +32,7 @@ namespace backend.Services
 
             if (userId.HasValue)
             {
-                await LogUserSearchAsync(userId.Value, cityName, content);
+                await LogUserSearchAsync(userId.Value, content);
             }
 
             return content;
@@ -57,15 +57,16 @@ namespace backend.Services
             return JsonSerializer.Deserialize<List<GeoLocationDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        private async Task LogUserSearchAsync(int userId, string cityName, string weatherJson)
+        private async Task LogUserSearchAsync(int userId, string weatherJson)
         {
+            _logger.LogInformation("Primljeni JSON s API-ja: {Json}", weatherJson);
             try
             {
                 var json = JsonNode.Parse(weatherJson);
                 var searchLog = new UserSearch
                 {
                     UserId = userId,
-                    SearchTerm = cityName ?? json?["name"]?.ToString() ?? "Nepoznato",
+                    SearchTerm = json?["name"]?.ToString() ?? "Nepoznato",
                     SearchedAt = DateTime.UtcNow,
                     Temperature = json?["main"]?["temp"]?.GetValue<double>() ?? 0,
                     Pressure = json?["main"]?["pressure"]?.GetValue<double>() ?? 0,

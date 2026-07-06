@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { auth } from "./auth/authSlice";
 import { weather } from "./weather/weatherSlice";
 import ui from "./ui/uiSlice";
+import locationReducer from "./location/locationSlice";
 import { rtkQueryErrorLogger } from "./errorMiddleware";
 import { search } from "./search/search";
 
@@ -11,6 +12,7 @@ export const store = configureStore({
 		[weather.reducerPath]: weather.reducer,
 		[search.reducerPath]: search.reducer,
 		ui: ui,
+		location: locationReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()

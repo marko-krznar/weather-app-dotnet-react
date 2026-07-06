@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -10,10 +10,13 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import PasswordInput from "../components/common/PasswordInput";
 import { translations, Language } from "../i18n/translations";
+import { setError, setLocation, startLoading } from "../redux/location/locationSlice";
+import { useDispatch } from "react-redux";
 
 export default function LoginPage() {
 	const t = translations[Language.HR];
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const [usernameOrEmail, setUsernameOrEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -30,6 +33,29 @@ export default function LoginPage() {
 			console.error(err);
 		}
 	};
+
+	useEffect(() => {
+		if (!navigator.geolocation) {
+			dispatch(setError("Geolocation is not supported by your browser."));
+			return;
+		}
+
+		dispatch(startLoading());
+
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				dispatch(
+					setLocation({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					})
+				);
+			},
+			(err) => {
+				dispatch(setError(err.message));
+			}
+		);
+	}, [dispatch]);
 
 	return (
 		<Stack spacing={2} sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
