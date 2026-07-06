@@ -6,6 +6,7 @@ import { weather } from "../redux/weather/weatherSlice";
 import { Divider, IconButton, Stack } from "@mui/material";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import { search } from "../redux/search/search";
+import { resetLocation } from "../redux/ui/uiSlice";
 
 export default function Navigation() {
 	const navigate = useNavigate();
@@ -14,6 +15,8 @@ export default function Navigation() {
 
 	const handleLogout = () => {
 		navigate("/login");
+
+		dispatch(resetLocation());
 
 		dispatch(auth.util.resetApiState());
 		dispatch(weather.util.resetApiState());
