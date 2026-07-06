@@ -94,5 +94,4 @@ export interface WeatherArgs {
 export interface WeatherCurrentArgs {
 	lat: number;
 	lon: number;
-	cityName: string;
 }

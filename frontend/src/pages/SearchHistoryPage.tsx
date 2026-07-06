@@ -35,7 +35,7 @@ export default function SearchHistoryPage() {
 
 	return (
 		<Box>
-			<Typography variant="h5" sx={{ mb: 2 }}>
+			<Typography variant="h4" sx={{ mb: 3 }}>
 				Povijest pretraga
 			</Typography>
 			<TableContainer component={Paper}>

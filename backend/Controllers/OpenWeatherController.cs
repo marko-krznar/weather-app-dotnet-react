@@ -11,12 +11,12 @@ namespace backend.Controllers
     public class OpenWeatherController(IWeatherService weatherService) : ControllerBase
     {
         [HttpGet("current")]
-        public async Task<IActionResult> GetCurrentWeather([FromQuery] double lat, [FromQuery] double lon, [FromQuery] string cityName)
+        public async Task<IActionResult> GetCurrentWeather([FromQuery] double lat, [FromQuery] double lon)
         {
             try
             {
                 int? userId = TryGetUserId(out int id) ? id : null;
-                var content = await weatherService.GetCurrentWeatherAsync(lat, lon, cityName, userId);
+                var content = await weatherService.GetCurrentWeatherAsync(lat, lon, userId);
                 return Content(content, "application/json");
             }
             catch (HttpRequestException)

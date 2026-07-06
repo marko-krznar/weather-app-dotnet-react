@@ -17,13 +17,12 @@ export const weather = createApi({
 	}),
 	endpoints: (builder) => ({
 		getCurrentWeather: builder.query<WeatherWidgetProps, WeatherCurrentArgs>({
-			query: ({ lat, lon, cityName }) => ({
+			query: ({ lat, lon }) => ({
 				url: "/OpenWeather/current",
 				method: "GET",
 				params: {
 					lat: lat,
 					lon: lon,
-					cityName: cityName,
 				},
 			}),
 		}),

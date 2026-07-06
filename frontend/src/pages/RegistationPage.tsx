@@ -12,8 +12,10 @@ import CardActions from "@mui/material/CardActions";
 import { useState } from "react";
 import PasswordInput from "../components/common/PasswordInput";
 import Alert from "@mui/material/Alert";
+import { translations, Language } from "../i18n/translations";
 
 export default function RegistationPage() {
+	const t = translations[Language.HR];
 	const navigate = useNavigate();
 	const [register, { isLoading, isError, error }] = useRegisterMutation();
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -69,7 +71,7 @@ export default function RegistationPage() {
 						<Typography variant="body1">{error && String((error as FetchBaseQueryError).data)}</Typography>
 					)}
 					<TextField
-						label="Username"
+						label={t.auth.username}
 						name="username"
 						value={formData.username}
 						onChange={(e) => setFormData((prev) => ({ ...prev, username: e.target.value }))}
