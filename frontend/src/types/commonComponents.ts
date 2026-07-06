@@ -5,7 +5,6 @@ export interface PasswordInputProps {
 	onChange: (_event: React.ChangeEvent<HTMLInputElement>) => void;
 	showPassword: boolean;
 	onToggleShowPassword: () => void;
-	label?: string;
 	id?: string;
 	required?: boolean;
 }

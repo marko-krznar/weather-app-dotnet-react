@@ -16,22 +16,32 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
 {
     public async Task<User?> RegisterAsync(UserDto request)
     {
-        if (await context.Users.AnyAsync(u => u.Username == request.Username))
+        using var transaction = await context.Database.BeginTransactionAsync();
+        try
         {
+            if (await context.Users.AnyAsync(u => u.Username == request.Username))
+            {
+                return null;
+            }
+
+            var user = new User();
+            var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password);
+
+            user.Username = request.Username;
+            user.PasswordHash = hashedPassword;
+            user.Email = request.Email;
+
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+            
+            await transaction.CommitAsync();
+            return user;
+        }
+        catch (DbUpdateException)
+        {
+            await transaction.RollbackAsync();
             return null;
         }
-
-        var user = new User();
-        var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password);
-
-        user.Username = request.Username;
-        user.PasswordHash = hashedPassword;
-        user.Email = request.Email;
-
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
-
-        return user;
     }
 
     private async Task<TokenResponseDto> CreateTokenResponse(User user)
@@ -42,7 +52,6 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
             RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
         };
     }
-
 
     public async Task<TokenResponseDto?> LoginAsync(string usernameOrEmail, string password)
     {
@@ -68,15 +77,22 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
         return await CreateTokenResponse(user);
     }
 
-
     private async Task<User?> ValidateRefreshTokenAsync(int userId, string refreshToken)
     {
         var user = await context.Users.FindAsync(userId);
-        if (user is null || string.IsNullOrEmpty(user.RefreshToken)
-            || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user is null || string.IsNullOrEmpty(user.RefreshToken))
         {
             return null;
         }
+
+        if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = null;
+            await context.SaveChangesAsync();
+            return null;
+        }
+
         var incomingHash = HashRefreshToken(refreshToken);
         if (!CryptographicOperations.FixedTimeEquals(
                 Encoding.UTF8.GetBytes(incomingHash),
@@ -86,6 +102,7 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
         }
         return user;
     }
+
     private static string HashRefreshToken(string token)
     {
         var bytes = Encoding.UTF8.GetBytes(token);
