@@ -26,7 +26,6 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
 	if (result.error && result.error.status === 401 && !isAuthRequest) {
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
-		sessionStorage.clear();
 
 		api.dispatch(resetLocation());
 

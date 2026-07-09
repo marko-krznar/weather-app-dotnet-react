@@ -10,8 +10,9 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import PasswordInput from "../components/common/PasswordInput";
 import { translations, Language } from "../i18n/translations";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setError, setLocation } from "../redux/ui/uiSlice";
+import type { RootStore } from "../redux/store";
 
 export default function LoginPage() {
 	const t = translations[Language.HR];
@@ -23,12 +24,13 @@ export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const [login, { isLoading }] = useLoginMutation();
+	const { lat, lon } = useSelector((state: RootStore) => state.ui);
 
 	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		try {
 			await login({ usernameOrEmail, password }).unwrap();
-			navigate("/");
+			navigate(`/${lat}/${lon}`);
 		} catch (err) {
 			console.error(err);
 		}

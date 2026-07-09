@@ -7,14 +7,10 @@ interface UiState {
 	errorMessage: string | null;
 }
 
-const savedLat = sessionStorage.getItem("lastLat");
-const savedLon = sessionStorage.getItem("lastLon");
-const savedCity = sessionStorage.getItem("lastCity");
-
 const initialState: UiState = {
-	lat: savedLat ? parseFloat(savedLat) : null,
-	lon: savedLon ? parseFloat(savedLon) : null,
-	selectedCityName: savedCity || null,
+	lat: null,
+	lon: null,
+	selectedCityName: null,
 	errorMessage: null,
 };
 
@@ -35,10 +31,6 @@ const uiSlice = createSlice({
 			if (action.payload.cityName) {
 				state.selectedCityName = action.payload.cityName;
 			}
-
-			sessionStorage.setItem("lastLat", action.payload.lat.toString());
-			sessionStorage.setItem("lastLon", action.payload.lon.toString());
-			sessionStorage.setItem("lastCity", action.payload.cityName);
 		},
 		setError: (state, action: PayloadAction<string>) => {
 			state.errorMessage = action.payload;
@@ -46,18 +38,7 @@ const uiSlice = createSlice({
 		clearError: (state) => {
 			state.errorMessage = null;
 		},
-		resetLocation: () => {
-			sessionStorage.removeItem("lastLat");
-			sessionStorage.removeItem("lastLon");
-			sessionStorage.removeItem("lastCity");
-
-			return {
-				lat: null,
-				lon: null,
-				selectedCityName: null,
-				errorMessage: null,
-			};
-		},
+		resetLocation: () => initialState,
 	},
 });
 

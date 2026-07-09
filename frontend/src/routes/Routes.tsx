@@ -12,7 +12,7 @@ export default function AppRoutes() {
 		<Routes>
 			<Route element={<MainLayout />}>
 				<Route element={<ProtectedRoute />}>
-					<Route path="/" element={<WeatherPage />} />
+					<Route path="/:lat?/:lon?/:cityName?" element={<WeatherPage />} />
 				</Route>
 				<Route path="/history" element={<SearchHistoryPage />} />
 				<Route path="/stats" element={<StatisticsPage />} />

@@ -1,29 +1,27 @@
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import {
-	useLazyGetCoordsByCityNameOpenStreetMapQuery,
-	// useLazyGetCoordsByCityNameQuery,
-} from "../redux/weather/weatherSlice";
-import { setLocation } from "../redux/ui/uiSlice";
-import { useDispatch } from "react-redux";
+import { useLazyGetCoordsByCityNameOpenStreetMapQuery } from "../redux/weather/weatherSlice";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { setLocation } from "../redux/ui/uiSlice";
 
 export default function SearchCity() {
 	const [cityName, setCityName] = useState("");
-	// const [triggerGetCoordsByCityName] = useLazyGetCoordsByCityNameQuery();
 	const [GetCoordsByCityNameOpenStreetMap] = useLazyGetCoordsByCityNameOpenStreetMapQuery();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCityName(event.target.value);
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+		event.preventDefault();
 
 		if (!cityName.trim()) return;
 
@@ -32,7 +30,10 @@ export default function SearchCity() {
 
 			if (geoResult && geoResult.length > 0) {
 				const { lat, lon, name } = geoResult[0];
-				dispatch(setLocation({ lat, lon, cityName: name }));
+				const safeCityName = encodeURIComponent(name);
+				dispatch(setLocation({ lat: lat, lon: lon, cityName: safeCityName }));
+				navigate(`/${lat}/${lon}/${safeCityName}`);
+				setCityName("");
 			}
 		} catch (error) {
 			console.error("Greška pri pretraživanju grada:", error);
