@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { useLazyGetCoordsByCityNameOpenStreetMapQuery } from "../redux/weather/weatherSlice";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
@@ -9,10 +8,11 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setLocation } from "../redux/ui/uiSlice";
+import { useLazyGetCoordsByCityNameQuery } from "../redux/weather/weatherSlice";
 
 export default function SearchCity() {
 	const [cityName, setCityName] = useState("");
-	const [GetCoordsByCityNameOpenStreetMap] = useLazyGetCoordsByCityNameOpenStreetMapQuery();
+	const [triggerGetCoordsByCityName] = useLazyGetCoordsByCityNameQuery();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ export default function SearchCity() {
 		if (!cityName.trim()) return;
 
 		try {
-			const geoResult = await GetCoordsByCityNameOpenStreetMap(cityName.trim(), false).unwrap();
+			const geoResult = await triggerGetCoordsByCityName(cityName.trim(), false).unwrap();
 
 			if (geoResult && geoResult.length > 0) {
 				const { lat, lon, name } = geoResult[0];

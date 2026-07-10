@@ -35,13 +35,6 @@ export const weather = createApi({
 			}),
 			keepUnusedDataFor: 0,
 		}),
-		getCoordsByCityNameOpenStreetMap: builder.query<Array<GeocodeLocation>, string>({
-			query: (cityName) => ({
-				url: `https://nominatim.openstreetmap.org/search?q=${cityName}&format=json`,
-				method: "GET",
-			}),
-			keepUnusedDataFor: 0,
-		}),
 	}),
 });
 
@@ -52,6 +45,4 @@ export const {
 	useLazyGetWeatherForFiveDaysQuery,
 	useGetCoordsByCityNameQuery,
 	useLazyGetCoordsByCityNameQuery,
-	useGetCoordsByCityNameOpenStreetMapQuery,
-	useLazyGetCoordsByCityNameOpenStreetMapQuery,
 } = weather;
