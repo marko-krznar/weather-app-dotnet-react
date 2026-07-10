@@ -12,7 +12,9 @@ export default function WeatherPage() {
 	const { lat: urlLat, lon: urlLon } = useParams<{ lat?: string; lon?: string }>();
 	const urlLatNumber = Number(urlLat);
 	const urlLonNumber = Number(urlLon);
-	const hasCoords = urlLatNumber !== null && urlLonNumber !== null && (urlLatNumber !== 0 || urlLonNumber !== 0);
+	const hasCoords =
+		!Number.isNaN(urlLatNumber) && !Number.isNaN(urlLonNumber) && (urlLatNumber !== 0 || urlLonNumber !== 0);
+
 	const token = localStorage.getItem("accessToken");
 
 	const { data: currentWeather } = useGetCurrentWeatherQuery(
