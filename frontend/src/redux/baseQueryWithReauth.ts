@@ -18,19 +18,45 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
 	api,
 	extraOptions
 ) => {
-	const result = await rawBaseQuery(args, api, extraOptions);
+	let result = await rawBaseQuery(args, api, extraOptions);
 
 	const url = typeof args === "string" ? args : args.url;
 	const isAuthRequest = url?.includes("/Auth");
 
 	if (result.error && result.error.status === 401 && !isAuthRequest) {
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
+		const refreshToken = localStorage.getItem("refreshToken");
 
-		api.dispatch(resetLocation());
+		if (refreshToken) {
+			const refreshResult = await rawBaseQuery(
+				{
+					url: "/Auth/refresh-token",
+					method: "POST",
+					body: { refreshToken },
+				},
+				api,
+				extraOptions
+			);
 
-		window.location.href = "/login";
+			if (refreshResult.data) {
+				const data = refreshResult.data as { accessToken: string; refreshToken: string };
+				localStorage.setItem("accessToken", data.accessToken);
+				localStorage.setItem("refreshToken", data.refreshToken);
+
+				result = await rawBaseQuery(args, api, extraOptions);
+			} else {
+				logout(api);
+			}
+		} else {
+			logout(api);
+		}
 	}
 
 	return result;
 };
+
+function logout(api) {
+	localStorage.removeItem("accessToken");
+	localStorage.removeItem("refreshToken");
+	api.dispatch(resetLocation());
+	window.location.href = "/login";
+}
