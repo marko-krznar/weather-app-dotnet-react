@@ -1,20 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { GeocodeLocation } from "../../types/geocode";
 import type { ForecastChartProps, WeatherArgs, WeatherCurrentArgs, WeatherWidgetProps } from "../../types/weather";
+import { baseQueryWithReauth } from "../baseQueryWithReauth";
 
 export const weather = createApi({
 	reducerPath: "weather",
-	baseQuery: fetchBaseQuery({
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
-		prepareHeaders: (headers) => {
-			const token = localStorage.getItem("accessToken");
-			if (token) {
-				headers.set("Authorization", `Bearer ${token}`);
-			}
-			return headers;
-		},
-	}),
+	baseQuery: baseQueryWithReauth,
 	endpoints: (builder) => ({
 		getCurrentWeather: builder.query<WeatherWidgetProps, WeatherCurrentArgs>({
 			query: ({ lat, lon }) => ({
@@ -44,13 +35,6 @@ export const weather = createApi({
 			}),
 			keepUnusedDataFor: 0,
 		}),
-		getCoordsByCityNameOpenStreetMap: builder.query<Array<GeocodeLocation>, string>({
-			query: (cityName) => ({
-				url: `https://nominatim.openstreetmap.org/search?q=${cityName}&format=json`,
-				method: "GET",
-			}),
-			keepUnusedDataFor: 0,
-		}),
 	}),
 });
 
@@ -61,6 +45,4 @@ export const {
 	useLazyGetWeatherForFiveDaysQuery,
 	useGetCoordsByCityNameQuery,
 	useLazyGetCoordsByCityNameQuery,
-	useGetCoordsByCityNameOpenStreetMapQuery,
-	useLazyGetCoordsByCityNameOpenStreetMapQuery,
 } = weather;

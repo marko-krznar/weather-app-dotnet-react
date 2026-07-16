@@ -31,7 +31,7 @@ export default function PasswordInput({
 				endAdornment={
 					<InputAdornment position="end">
 						<IconButton
-							aria-label={showPassword ? t.auth.showPassword : t.auth.hidePassword}
+							aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
 							onClick={onToggleShowPassword}
 							edge="end"
 						>
