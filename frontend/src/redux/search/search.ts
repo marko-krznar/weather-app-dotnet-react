@@ -1,18 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { SearchHistoryItem, SearchStatsResponse } from "../../types/search";
+import { baseQueryWithReauth } from "../baseQueryWithReauth";
 
 export const search = createApi({
 	reducerPath: "search",
-	baseQuery: fetchBaseQuery({
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
-		prepareHeaders: (headers) => {
-			const token = localStorage.getItem("accessToken");
-			if (token) {
-				headers.set("Authorization", `Bearer ${token}`);
-			}
-			return headers;
-		},
-	}),
+	baseQuery: baseQueryWithReauth,
 	endpoints: (builder) => ({
 		getSearchHistory: builder.query<
 			{ items: Array<SearchHistoryItem>; totalCount: number },

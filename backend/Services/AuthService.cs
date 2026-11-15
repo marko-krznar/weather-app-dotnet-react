@@ -70,17 +70,18 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
 
     public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
     {
-        var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+        var user = await ValidateRefreshTokenAsync(request.RefreshToken);
         if (user is null)
             return null;
 
         return await CreateTokenResponse(user);
     }
 
-    private async Task<User?> ValidateRefreshTokenAsync(int userId, string refreshToken)
+    private async Task<User?> ValidateRefreshTokenAsync(string refreshToken)
     {
-        var user = await context.Users.FindAsync(userId);
-        if (user is null || string.IsNullOrEmpty(user.RefreshToken))
+        var incomingHash = HashRefreshToken(refreshToken);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.RefreshToken == incomingHash);
+        if (user is null)
         {
             return null;
         }
@@ -93,13 +94,6 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
             return null;
         }
 
-        var incomingHash = HashRefreshToken(refreshToken);
-        if (!CryptographicOperations.FixedTimeEquals(
-                Encoding.UTF8.GetBytes(incomingHash),
-                Encoding.UTF8.GetBytes(user.RefreshToken)))
-        {
-            return null;
-        }
         return user;
     }
 

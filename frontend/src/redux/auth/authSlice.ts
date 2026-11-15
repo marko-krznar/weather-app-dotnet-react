@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../baseQueryWithReauth";
 
 interface LoginResponse {
 	accessToken: string;
@@ -7,16 +8,7 @@ interface LoginResponse {
 
 export const auth = createApi({
 	reducerPath: "auth",
-	baseQuery: fetchBaseQuery({
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
-		prepareHeaders: (headers) => {
-			const token = localStorage.getItem("accessToken");
-			if (token) {
-				headers.set("authorization", `Bearer ${token}`);
-			}
-			return headers;
-		},
-	}),
+	baseQuery: baseQueryWithReauth,
 	endpoints: (builder) => ({
 		login: builder.mutation<LoginResponse, { usernameOrEmail: string; password: string }>({
 			query: (credentials) => ({

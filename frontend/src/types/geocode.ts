@@ -7,5 +7,5 @@ export interface GeocodeLocation {
 	local_names?: LocalNames;
 	lat: number;
 	lon: number;
-	country: string;
+	country?: string;
 }

@@ -38,8 +38,9 @@ const uiSlice = createSlice({
 		clearError: (state) => {
 			state.errorMessage = null;
 		},
+		resetLocation: () => initialState,
 	},
 });
 
-export const { setLocation, setError, clearError } = uiSlice.actions;
+export const { setLocation, setError, clearError, resetLocation } = uiSlice.actions;
 export default uiSlice.reducer;

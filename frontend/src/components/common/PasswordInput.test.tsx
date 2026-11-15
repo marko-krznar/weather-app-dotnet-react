@@ -57,7 +57,7 @@ describe("PasswordInput", () => {
 		const user = userEvent.setup();
 		const props = renderPasswordInput({ showPassword: false });
 
-		await user.click(screen.getByRole("button", { name: t.auth.hidePassword }));
+		await user.click(screen.getByRole("button", { name: t.auth.showPassword }));
 
 		expect(props.onToggleShowPassword).toHaveBeenCalledTimes(1);
 	});
@@ -65,7 +65,7 @@ describe("PasswordInput", () => {
 	it("toggle button has correct aria-label when password is visible", () => {
 		renderPasswordInput({ showPassword: true });
 
-		expect(screen.getByRole("button", { name: t.auth.showPassword })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: t.auth.hidePassword })).toBeInTheDocument();
 	});
 
 	it("input is required when required=true", () => {
